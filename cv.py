@@ -15,31 +15,28 @@ camera_device_number = 0
 # Open the USB camera
 cap = cv2.VideoCapture(camera_device_number)
 
-# Inference loop
-while True:
-    success, frame = cap.read()  
-    if not success:
-        print("Could not read frame from camera")  
+# Loop through the video frames
+while cap.isOpened():
+    # Read a frame from the video
+    success, frame = cap.read()
+
+    if success:
+        # Run YOLOv8 inference on the frame
+        results = model(frame)
+
+        # Visualize the results on the frame
+        annotated_frame = results[0].plot()
+
+        # Display the annotated frame
+        cv2.imshow("YOLOv8 Inference", annotated_frame)
+
+        # Break the loop if 'q' is pressed
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+    else:
+        # Break the loop if the end of the video is reached
         break
 
-    results = model(frame, stream=True)  
-
-    for result in results:
-        boxes = result.boxes
-        probs = result.probs
-
-        # Draw bounding boxes and labels on the frame
-        for box, prob in zip(boxes.xyxy, probs): 
-            x1, y1, x2, y2 = map(int, box)
-            label = f'{result.names[int(box.cls)]}: {prob:.2f}'  # Class label and probability
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  # Green box
-            cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-    # Display the frame
-    cv2.imshow('YOLOv8 Live Detection', frame)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
-        break
-
-cap.release() 
-cv2.destroyAllWindows() 
+# Release the video capture object and close the display window
+cap.release()
+cv2.destroyAllWindows()
