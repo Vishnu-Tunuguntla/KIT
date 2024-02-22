@@ -1,6 +1,12 @@
 from ultralytics import YOLO
 import cv2  # Import OpenCV
 
+#Before running follow steps for Virtual Envrionment
+#python3 -m venv myenv
+#source myenv/bin/activate
+#pip install -r requirements.txt
+#deactivate when done
+
 # Load the YOLOv8n model
 model = YOLO('yolov8n.pt')
 
