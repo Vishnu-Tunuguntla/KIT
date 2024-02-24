@@ -30,4 +30,7 @@ yarn.lock
 .env
 myenv
 
-# Ignore any file or directory starting with a dot
+# Ignore Yolo Models
+yolov8l.pt
+yolov8m.pt
+yolov8x.pt
