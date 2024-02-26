@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 
 # Load the YOLOv8n model
-model = YOLO('yolov8m.pt')
+model = YOLO('yolov8l.pt')
 path = r"C:\Users\15715\Desktop\KitTools\Videos\foods2.mp4"
 
 
