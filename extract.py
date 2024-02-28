@@ -20,6 +20,34 @@ s3 = boto3.client(
 )
 bucket_name = 'kitbucketaws'
 
+# Retrieves all unprocessed videos from the database for later frame extraction and analysis.
+def query_all_videos():
+    """
+    Retrieves all unprocessed videos from the database.
+    
+    Returns:
+    A list of dictionaries, where each dictionary contains the video metadata.
+    """
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(**db_conn_params)
+
+    # Create a cursor object
+    cur = conn.cursor()
+
+    # Execute the query
+    cur.execute("SELECT * FROM videos WHERE Processed = FALSE")
+
+    # Fetch all the rows
+    rows = cur.fetchall()
+
+    # Close the cursor and connection
+    cur.close()
+    conn.close()
+
+    # Return the rows
+    return rows
+
+# First query the database for all unprocessed videos. Then download the videos from S3 and process them.
 def download_video_from_s3(s3_key):
     """
     Downloads a video file from S3 and returns the file path.
@@ -54,34 +82,6 @@ def upload_video_to_s3(file_path):
     video_key = f"videos/{datetime.now().strftime('%Y-%m-%d')}/{file_path.split('/')[-1]}"
     s3.upload_file(file_path, bucket_name, video_key)
     return video_key
-
-
-# Retrieves all unprocessed videos from the database for later frame extraction and analysis.
-def query_all_videos():
-    """
-    Retrieves all unprocessed videos from the database.
-    
-    Returns:
-    A list of dictionaries, where each dictionary contains the video metadata.
-    """
-    # Connect to the PostgreSQL database
-    conn = psycopg2.connect(**db_conn_params)
-
-    # Create a cursor object
-    cur = conn.cursor()
-
-    # Execute the query
-    cur.execute("SELECT * FROM videos WHERE Processed = FALSE")
-
-    # Fetch all the rows
-    rows = cur.fetchall()
-
-    # Close the cursor and connection
-    cur.close()
-    conn.close()
-
-    # Return the rows
-    return rows
 
 # Inserts videos and their addresses from AWS S3 bucket into the database. Temporary method for testing purposes. Will need to be replaced with a method - using the AWS API - that can be called from the Rasberry Pi.
 def insert_video_metadata(db_conn_params, device_id, s3_key, timestamp, motion_detected):
