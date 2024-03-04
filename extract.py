@@ -108,10 +108,29 @@ def insert_video_metadata(db_conn_params, device_id, s3_key, timestamp, motion_d
             video_id = cur.fetchone()[0]
             print(f"Video metadata inserted successfully with VideoID: {video_id}")
 
+# Extracts the S3 keys from a list of video dictionaries.
+def extract_s3_keys(video_list):
+    """
+    Extracts the S3 keys from a list of video dictionaries.
+
+    Args:
+    - video_list: A list of dictionaries representing video metadata.
+
+    Returns:
+    A list of S3 keys.
+    """
+    s3_keys = [video[3] for video in video_list]
+    return s3_keys
+
     
 
 # file_path = r"C:\Users\15715\Desktop\KitTools\Videos\foods2.mp4"
 # s3_key = upload_video_to_s3(file_path)
 # insert_video_metadata(db_conn_params, "DesktopPC", s3_key, datetime.now(), True)
-# print(download_video_from_s3(s3_key))
-print(query_all_videos())
+#print(download_video_from_s3(s3_key))
+#print(extract_s3_keys(query_all_videos()))
+list_of_keys = extract_s3_keys(query_all_videos())
+for key in list_of_keys:
+    print(download_video_from_s3(key))
+    print(key)
+    print("\n")
