@@ -36,5 +36,16 @@ yolov8m.pt
 yolov8x.pt
 
 #ignore S3 Downloads and MP4
+S3Downloads/
 .MP4
 
+#ignore extracted_images folder
+extracted_images/
+```
+
+#ignore virutal environment
+venv/
+```
+my_project_env/
+```
+idea/
