@@ -45,7 +45,6 @@ def delete_all_videos():
     # Close the cursor and connection
     cur.close()
     conn.close()
-#delete_all_videos()
-query_all_videos()
+delete_all_videos()
 
 

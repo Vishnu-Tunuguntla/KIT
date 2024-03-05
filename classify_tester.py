@@ -2,8 +2,8 @@ from ultralytics import YOLO
 import cv2
 
 # Load the YOLOv8n model
-model = YOLO('yolov8l.pt')
-path = r"C:\Users\15715\Desktop\KitTools\Videos\homevid.mp4"
+model = YOLO('best.pt')
+path = "/Users/vishtun/Downloads/test_home.mp4"
 
 
 

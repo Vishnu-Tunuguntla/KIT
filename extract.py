@@ -129,8 +129,9 @@ def extract_s3_keys(video_list):
 # insert_video_metadata(db_conn_params, "DesktopPC", s3_key, datetime.now(), True)
 #print(download_video_from_s3(s3_key))
 #print(extract_s3_keys(query_all_videos()))
-list_of_keys = extract_s3_keys(query_all_videos())
-for key in list_of_keys:
-    print(download_video_from_s3(key))
-    print(key)
-    print("\n")
+# list_of_keys = extract_s3_keys(query_all_videos())
+# for key in list_of_keys:
+#     print(download_video_from_s3(key))
+#     print(key)
+#     print("\n")
+print(query_all_videos())
