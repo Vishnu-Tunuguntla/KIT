@@ -12,12 +12,21 @@ model = CLIPModel.from_pretrained(model_name)
 folder_path = "/Users/havishrallabandi/K.I.T/Images"
 
 image_paths = [os.path.join(folder_path, filename) for filename in os.listdir(folder_path) if filename.endswith(".jpeg") or filename.endswith(".jpg")]
-print (image_paths)
 
+print(image_paths)
 preprocessed_images = [processor(images=Image.open(image_path), return_tensors="pt") for image_path in image_paths]
 
-texts = ["apple","banana","orange","grape","peach","blueberry","bread","ramen","cereal box"] 
-text_inputs = processor(text=texts, padding=True, return_tensors="pt")
+label_path = "/Users/havishrallabandi/K.I.T/labels.txt"
+
+label_list = []
+
+with open(label_path,'r') as file:
+    for line in file:
+        label_list.append(line.strip())
+
+text_inputs = processor(text=label_list, padding=True, return_tensors="pt")
+
+print(label_list)
 
 counter = 0
 for preprocessed_image in preprocessed_images:
@@ -32,8 +41,11 @@ for preprocessed_image in preprocessed_images:
     # Calculate similarities
     similarities = (text_features @ image_features.T).softmax(dim=0)
 
-    # Find the best class for each image
-    best_class = texts[similarities.argmax()]
+    # Get the top 3 labels and their confidence scores
+    top_scores, top_indices = similarities.topk(3, dim=0)
+    
+    top_labels = [label_list[idx] for idx in top_indices]
+    top_confidences = top_scores.tolist()
+    
     counter += 1
-    print(f"Best class for Image {counter}: {best_class}")
-
+    print(f"Top 3 classes for Image {counter}: {list(zip(top_labels, top_confidences))}")
