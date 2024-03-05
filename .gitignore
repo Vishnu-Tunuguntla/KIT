@@ -34,3 +34,7 @@ myenv
 yolov8l.pt
 yolov8m.pt
 yolov8x.pt
+
+#ignore S3 Downloads and MP4
+.MP4
+
