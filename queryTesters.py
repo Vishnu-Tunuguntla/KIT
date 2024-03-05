@@ -45,6 +45,40 @@ def delete_all_videos():
     # Close the cursor and connection
     cur.close()
     conn.close()
-delete_all_videos()
+
+# Queries all videos marked as unprocessed
+def query_unprocessed_videos():
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(**db_conn_params)
+    # Create a cursor object
+    cur = conn.cursor()
+    # Execute the query
+    cur.execute("SELECT * FROM videos WHERE processed = false")
+    # Fetch all the rows
+    rows = cur.fetchall()
+    # Print the rows
+    for row in rows:
+        print(row)
+    # Close the cursor and connection
+    cur.close()
+    conn.close()
+    
+ #Queries all videos marked as processed
+def query_processed_videos():
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(**db_conn_params)
+    # Create a cursor object
+    cur = conn.cursor()
+    # Execute the query
+    cur.execute("SELECT * FROM videos WHERE processed = true")
+    # Fetch all the rows
+    rows = cur.fetchall()
+    # Print the rows
+    for row in rows:
+        print(row)
+    # Close the cursor and connection
+    cur.close()
+    conn.close()
+query_processed_videos()
 
 
