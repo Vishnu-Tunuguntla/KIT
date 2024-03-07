@@ -8,6 +8,7 @@ import numpy as np
 import imagehash
 from PIL import Image
 import os
+from gpt_classify import llm_classify
 
 # PostgresSQL Connection Paramaters
 db_conn_params = {
@@ -26,6 +27,7 @@ s3 = boto3.client(
 )
 bucket_name = 'kitbucketaws'
 
+# Downloads a video file from S3 and returns the file path.
 def download_video_from_s3(s3_key):
     """
     Downloads a video file from S3 and returns the file path.
@@ -128,35 +130,7 @@ def extract_s3_keys(video_list):
     s3_keys = [video[3] for video in video_list]
     return s3_keys
 
-#TESTING THESE NEW METHODS
-
-def process_unprocessed_videos():
-    """
-    Processes unprocessed videos, extracts frames, and inserts them into the database.
-    """
-    # Query all unprocessed videos from the database
-    unprocessed_videos = query_all_videos()
-
-    # Update the videos as processed in the database
-    update_videos_as_processed(unprocessed_videos)
-
-    # Process each unprocessed video
-    for video in unprocessed_videos:
-        video_id = video[0]
-        s3_key = video[3]
-
-        # Download the video from S3
-        video_path = download_video_from_s3(s3_key)
-
-        # Extract frames from the video using the logic from frame_extract_advanced.py
-        extracted_frames = extract_frames_from_video(video_path)
-
-        # Insert the extracted frames into the database
-        insert_frames_into_database(video_id, extracted_frames)
-
-        # Upload the extracted frames to S3
-        upload_frames_to_s3(extracted_frames)
-
+# Updates the videos as processed in the database.
 def update_videos_as_processed(videos):
     """
     Updates the videos as processed in the database.
@@ -173,6 +147,7 @@ def update_videos_as_processed(videos):
                 video_id = video[0]
                 cur.execute(update_query, (video_id,))
 
+# Extracts frames using a video path and accounts for duplicates using hash comparison and blur using variance of Laplacian.
 def extract_frames_from_video(video_path):
     # Load the custom YOLO model
     model = YOLO('best.pt')
@@ -181,7 +156,7 @@ def extract_frames_from_video(video_path):
     confidence_threshold = 0.85
 
     # Set the blur threshold, higher values mean less blurry images
-    blur_threshold = 100
+    blur_threshold = 80
 
     # Set the hash size for image comparison
     hash_size = 8
@@ -335,9 +310,100 @@ def upload_frames_to_s3(frames):
         s3_key = f"frames/{frame_path.split('/')[-1]}"
         s3.upload_file(frame_path, bucket_name, s3_key)
 
-# TESTING THESE NEW METHODS
+def query_unprocessed_frames():
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(**db_conn_params)
 
-    
+    # Create a cursor object
+    cur = conn.cursor()
+
+    # Execute the query to retrieve unprocessed frames
+    cur.execute("SELECT * FROM frames WHERE processed = false")
+
+    # Fetch all the rows
+    rows = cur.fetchall()
+
+    # Close the cursor and connection
+    cur.close()
+    conn.close()
+
+    return rows
+
+def update_frame_as_processed(frame_id):
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(**db_conn_params)
+
+    # Create a cursor object
+    cur = conn.cursor()
+
+    # Execute the query to update the frame as processed
+    cur.execute("UPDATE frames SET processed = true WHERE frameid = %s", (frame_id,))
+
+    # Commit the transaction
+    conn.commit()
+
+    # Close the cursor and connection
+    cur.close()
+    conn.close()
+
+# Extracts frames from a video file using the YOLOv8 object detection model.
+def process_unprocessed_videos():
+    """
+    Processes unprocessed videos, extracts frames, and inserts them into the database.
+    """
+    # Query all unprocessed videos from the database
+    unprocessed_videos = query_all_videos()
+
+    # Update the videos as processed in the database
+    update_videos_as_processed(unprocessed_videos)
+
+    # Process each unprocessed video
+    for video in unprocessed_videos:
+        video_id = video[0]
+        s3_key = video[3]
+
+        # Download the video from S3
+        video_path = download_video_from_s3(s3_key)
+
+        # Extract frames from the video using the logic from frame_extract_advanced.py
+        extracted_frames = extract_frames_from_video(video_path)
+
+        # Insert the extracted frames into the database
+        insert_frames_into_database(video_id, extracted_frames)
+
+        # Upload the extracted frames to S3
+        upload_frames_to_s3(extracted_frames)
+
+def process_unprocessed_frames():
+    # Query all unprocessed frames from the database
+    unprocessed_frames = query_unprocessed_frames()
+
+    # Process each unprocessed frame
+    for frame in unprocessed_frames:
+        frame_id = frame[0]
+        frame_path = frame[3]
+
+        try:
+            # Classify the frame using the llm_classify function
+            llm_classify(frame_path)
+
+            # Update the frame as processed in the database
+            update_frame_as_processed(frame_id)
+
+        except Exception as e:
+            print(f"Error occurred while processing frame {frame_id}: {e}")
+            
+def execute_insert_video(file_path, location):
+    s3_key = upload_video_to_s3(file_path)
+    insert_video_metadata(db_conn_params, location, s3_key, datetime.now(), True)
+
+def execute_process():
+    process_unprocessed_videos()
+    process_unprocessed_frames()
+
+
+
+
 
 # file_path = r"C:\Users\15715\Desktop\KitTools\Videos\foods2.mp4"
 # s3_key = upload_video_to_s3(file_path)
@@ -350,7 +416,6 @@ def upload_frames_to_s3(frames):
 #     print(key)
 #     print("\n")
 
-file_path = "/Users/vishtun/Downloads/test_home.mp4"
-s3_key = upload_video_to_s3(file_path)
-insert_video_metadata(db_conn_params, "Macbook", s3_key, datetime.now(), True)
-process_unprocessed_videos()
+file_path = "/Users/vishtun/Downloads/test_home_2.mp4"
+execute_insert_video(file_path, "Macbook")
+execute_process()
