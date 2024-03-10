@@ -4,7 +4,7 @@ import json
 import os
 
 # OpenAI API key
-api_key = "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"
+api_key = "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"
 
 # Function to encode the image
 def encode_image(image_path):

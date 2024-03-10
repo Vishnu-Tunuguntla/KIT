@@ -162,7 +162,7 @@ def extract_frames_from_video(video_path):
     hash_size = 8
 
     # Set the hash threshold for image comparison, higher makes duplication detection more strict
-    hash_threshold = 20
+    hash_threshold = 25
 
     # Set the output folder for extracted images
     output_folder = "extracted_images"
@@ -416,6 +416,6 @@ def execute_process():
 #     print(key)
 #     print("\n")
 
-file_path = "/Users/vishtun/Downloads/test_home_2.mp4"
-execute_insert_video(file_path, "Macbook")
+file_path = r"C:\Users\15715\Desktop\KITProj\KIT\KitTools\Videos\home_tester.mp4"
+execute_insert_video(file_path, "DesktopPC")
 execute_process()

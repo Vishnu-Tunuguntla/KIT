@@ -1,0 +1,21 @@
+{
+    "name": "Pita Crackers",
+    "brand": "Savoritz",
+    "category": "Crackers",
+    "nutrition_facts": {
+        "serving_size": "About 9 crackers",
+        "calories": "130",
+        "total_fat": "3g",
+        "saturated_fat": "0g",
+        "trans_fat": null,
+        "cholesterol": "0mg",
+        "sodium": "150mg",
+        "total_carbohydrates": "23g",
+        "dietary_fiber": "<1g",
+        "sugars": "<1g",
+        "protein": "3g"
+    },
+    "ingredients": null,
+    "expiration_date": null,
+    "quantity": "NET WT 5 OZ (142g)"
+}

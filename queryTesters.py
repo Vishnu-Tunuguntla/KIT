@@ -1,4 +1,6 @@
 import psycopg2
+import tkinter as tk
+from tkinter import ttk
 # PostgresSQL Connection Paramaters
 db_conn_params = {
     'dbname': 'postgres',
@@ -147,8 +149,69 @@ def delete_all_frames():
     cur.close()
     conn.close()
 
-delete_all_frames()
-delete_all_videos()
-query_all_videos()
-query_all_frames()
+def create_ui():
+    window = tk.Tk()
+    window.title("Database Management")
+
+    # Create buttons for each function
+    button_query_all_videos = ttk.Button(window, text="Query All Videos", command=query_all_videos)
+    button_query_all_videos.pack(pady=5)
+
+    button_delete_all_videos = ttk.Button(window, text="Delete All Videos", command=delete_all_videos)
+    button_delete_all_videos.pack(pady=5)
+
+    button_query_unprocessed_videos = ttk.Button(window, text="Query Unprocessed Videos", command=query_unprocessed_videos)
+    button_query_unprocessed_videos.pack(pady=5)
+
+    button_query_processed_videos = ttk.Button(window, text="Query Processed Videos", command=query_processed_videos)
+    button_query_processed_videos.pack(pady=5)
+
+    button_query_all_frames = ttk.Button(window, text="Query All Frames", command=query_all_frames)
+    button_query_all_frames.pack(pady=5)
+
+    button_query_unprocessed_frames = ttk.Button(window, text="Query Unprocessed Frames", command=query_unprocessed_frames)
+    button_query_unprocessed_frames.pack(pady=5)
+
+    button_query_processed_frames = ttk.Button(window, text="Query Processed Frames", command=query_processed_frames)
+    button_query_processed_frames.pack(pady=5)
+
+    button_delete_all_frames = ttk.Button(window, text="Delete All Frames", command=delete_all_frames)
+    button_delete_all_frames.pack(pady=5)
+
+    # Create a panel to display the database values
+    result_panel = ttk.Label(window, text="")
+    result_panel.pack(pady=10)
+
+    def update_result_panel(rows):
+        result_text = ""
+        for row in rows:
+            result_text += str(row) + "\n"
+        result_panel.config(text=result_text)
+
+    def query_all_videos_ui():
+        conn = psycopg2.connect(**db_conn_params)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM videos")
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        update_result_panel(rows)
+
+    def query_all_frames_ui():
+        conn = psycopg2.connect(**db_conn_params)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM frames")
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        update_result_panel(rows)
+
+    # Modify the query functions to update the result panel
+    button_query_all_videos.config(command=query_all_videos_ui)
+    button_query_all_frames.config(command=query_all_frames_ui)
+
+    window.mainloop()
+
+# Create the UI
+create_ui()
 

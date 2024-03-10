@@ -1,0 +1,26 @@
+<annotation>
+	<folder>tomato_sauce</folder>
+	<filename>TOMATO_SAUCE0012.png</filename>
+	<path>C:\Users\Aleksandar\Desktop\groceries-object-detection-dataset\dataset\images\tomato_sauce\TOMATO_SAUCE0012.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>224</width>
+		<height>224</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>tomato_sauce</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>62</xmin>
+			<ymin>53</ymin>
+			<xmax>144</xmax>
+			<ymax>174</ymax>
+		</bndbox>
+	</object>
+</annotation>
