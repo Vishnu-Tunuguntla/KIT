@@ -3,7 +3,7 @@ import cv2
 
 # Load the YOLOv8n model
 model = YOLO('best.pt')
-path = "/Users/vishtun/Downloads/test_home_3.mp4"
+path = r"C:\Users\15715\Desktop\KITProj\KIT\KitTools\images\human.jpg"
 
 
 

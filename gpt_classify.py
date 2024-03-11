@@ -4,7 +4,7 @@ import json
 import os
 
 # OpenAI API key
-api_key = "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"
+api_key = ""
 
 # Function to encode the image
 def encode_image(image_path):
@@ -89,4 +89,5 @@ def llm_classify(image_path):
         print(f"Response text: {response_text}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+print(api_key)
 

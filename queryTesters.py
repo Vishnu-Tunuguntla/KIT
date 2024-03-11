@@ -1,6 +1,8 @@
 import psycopg2
 import tkinter as tk
 from tkinter import ttk
+import os
+import shutil
 # PostgresSQL Connection Paramaters
 db_conn_params = {
     'dbname': 'postgres',
@@ -149,16 +151,40 @@ def delete_all_frames():
     cur.close()
     conn.close()
 
+def delete_all_data():
+    # Connect to the PostgreSQL database
+    conn = psycopg2.connect(**db_conn_params)
+
+    # Create a cursor object
+    cur = conn.cursor()
+
+    # Execute the queries to delete data from all tables
+    cur.execute("DELETE FROM NutritionalFacts")
+    cur.execute("DELETE FROM ObjectDetails")
+    cur.execute("DELETE FROM AnalysisResults")
+    cur.execute("DELETE FROM Frames")
+    cur.execute("DELETE FROM Videos")
+
+    # Commit the transaction
+    conn.commit()
+
+    # Close the cursor and connection
+    cur.close()
+    conn.close()
+
+    # Delete the contents of the 'extracted_images' and 'json_files' folders
+    if os.path.exists("extracted_images"):
+        shutil.rmtree("extracted_images")
+    if os.path.exists("json_files"):
+        shutil.rmtree("json_files")
+
 def create_ui():
     window = tk.Tk()
     window.title("Database Management")
 
-    # Create buttons for each function
+    # Create buttons for query functions
     button_query_all_videos = ttk.Button(window, text="Query All Videos", command=query_all_videos)
     button_query_all_videos.pack(pady=5)
-
-    button_delete_all_videos = ttk.Button(window, text="Delete All Videos", command=delete_all_videos)
-    button_delete_all_videos.pack(pady=5)
 
     button_query_unprocessed_videos = ttk.Button(window, text="Query Unprocessed Videos", command=query_unprocessed_videos)
     button_query_unprocessed_videos.pack(pady=5)
@@ -175,8 +201,15 @@ def create_ui():
     button_query_processed_frames = ttk.Button(window, text="Query Processed Frames", command=query_processed_frames)
     button_query_processed_frames.pack(pady=5)
 
+    # Create buttons for delete functions
+    button_delete_all_videos = ttk.Button(window, text="Delete All Videos", command=delete_all_videos)
+    button_delete_all_videos.pack(pady=5)
+
     button_delete_all_frames = ttk.Button(window, text="Delete All Frames", command=delete_all_frames)
     button_delete_all_frames.pack(pady=5)
+
+    button_delete_all_data = ttk.Button(window, text="Delete All Data", command=delete_all_data)
+    button_delete_all_data.pack(pady=5)
 
     # Create a panel to display the database values
     result_panel = ttk.Label(window, text="")
@@ -214,4 +247,3 @@ def create_ui():
 
 # Create the UI
 create_ui()
-
