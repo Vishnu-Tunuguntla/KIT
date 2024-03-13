@@ -1,0 +1,26 @@
+<annotation>
+	<folder>beans</folder>
+	<filename>BEANS0076.png</filename>
+	<path>C:\Users\Aleksandar\Desktop\yolo-groceries-dataset\dataset\images\beans\BEANS0076.png</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>224</width>
+		<height>224</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>beans</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>65</xmin>
+			<ymin>8</ymin>
+			<xmax>191</xmax>
+			<ymax>201</ymax>
+		</bndbox>
+	</object>
+</annotation>
