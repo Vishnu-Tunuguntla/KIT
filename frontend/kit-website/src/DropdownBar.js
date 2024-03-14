@@ -13,7 +13,13 @@ function DropdownBar() {
   };
 
   const navigateToHome = () => {
-    navigate('/'); // Navigate to the home page
+    navigate('/');
+    setIsOpen(false);
+    setIsVisible(false);
+  };
+
+  const navigateToProcessingAndQueries = () => {
+    navigate('/processing-and-queries');
     setIsOpen(false);
     setIsVisible(false);
   };
@@ -31,10 +37,13 @@ function DropdownBar() {
           {isOpen && (
             <ul className="dropdown-menu">
               <li>
-                <button onClick={navigateToHome}>Home</button> {/* Add navigation to home page */}
+                <button onClick={navigateToHome}>Home</button>
               </li>
               <li>
                 <button onClick={navigateToUploadVideo}>Upload Video</button>
+              </li>
+              <li>
+                <button onClick={navigateToProcessingAndQueries}>Processing and Queries</button>
               </li>
             </ul>
           )}

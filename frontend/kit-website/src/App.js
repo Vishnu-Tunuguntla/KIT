@@ -4,7 +4,8 @@ import DropdownBar from './DropdownBar';
 import './DropdownBar.css';
 import './App.css';
 import UploadVideoPage from './UploadVideoPage';
-import HomePage from './HomePage'; // Import the HomePage component
+import HomePage from './HomePage';
+import ProcessingAndQueriesPage from './ProcessingAndQueriesPage';
 
 function App() {
   return (
@@ -12,8 +13,9 @@ function App() {
       <div className="App">
         <DropdownBar />
         <Routes>
-          <Route path="/" element={<HomePage />} /> {/* Add route for the home page */}
+          <Route path="/" element={<HomePage />} />
           <Route path="/upload-video" element={<UploadVideoPage />} />
+          <Route path="/processing-and-queries" element={<ProcessingAndQueriesPage />} />
         </Routes>
       </div>
     </Router>

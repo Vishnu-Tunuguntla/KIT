@@ -1,0 +1,32 @@
+.processing-queries-page {
+    margin-left: 220px;
+    padding: 20px;
+  }
+  
+  .page-header {
+    margin-bottom: 20px;
+  }
+  
+  .query-buttons {
+    margin-bottom: 20px;
+  }
+  
+  .query-buttons button {
+    margin-right: 10px;
+  }
+  
+  .query-result {
+    text-align: center;
+  }
+  
+  .media-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .media-container img,
+  .media-container video {
+    width: 100%;
+    height: auto;
+  }

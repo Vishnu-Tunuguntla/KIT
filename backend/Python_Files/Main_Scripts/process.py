@@ -9,6 +9,7 @@ import imagehash
 from PIL import Image
 import os
 from gpt_classify import llm_classify
+import shutil
 
 # PostgresSQL Connection Paramaters
 db_conn_params = {
@@ -65,7 +66,7 @@ def upload_video_to_s3(file):
 
 
 # Retrieves all unprocessed videos from the database for later frame extraction and analysis.
-def query_all_videos():
+def query_all_videos_og():
     """
     Retrieves all unprocessed videos from the database.
     
@@ -295,8 +296,9 @@ def insert_frames_into_database(video_id, frames):
         with conn.cursor() as cur:
             for frame in frames:
                 timestamp = frame['timestamp']
-                path = frame['frame_path']
-                cur.execute(insert_query, (video_id, timestamp, path))
+                frame_path = frame['frame_path']
+                s3_key = f"frames/{frame_path.split('/')[-1]}"
+                cur.execute(insert_query, (video_id, timestamp, s3_key))
 
 def upload_frames_to_s3(frames):
     """
@@ -352,7 +354,7 @@ def process_unprocessed_videos():
     Processes unprocessed videos, extracts frames, and inserts them into the database.
     """
     # Query all unprocessed videos from the database
-    unprocessed_videos = query_all_videos()
+    unprocessed_videos = query_all_videos_og()
 
     # Update the videos as processed in the database
     update_videos_as_processed(unprocessed_videos)
@@ -392,6 +394,76 @@ def process_unprocessed_frames():
 
         except Exception as e:
             print(f"Error occurred while processing frame {frame_id}: {e}")
+
+def query_all_videos():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM videos")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [f"https://{bucket_name}.s3.amazonaws.com/{row[3]}" for row in rows]
+
+def query_unprocessed_videos():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM videos WHERE processed = false")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [f"https://{bucket_name}.s3.amazonaws.com/{row[3]}" for row in rows]
+
+def query_processed_videos():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM videos WHERE processed = true")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [f"https://{bucket_name}.s3.amazonaws.com/{row[3]}" for row in rows]
+
+def query_frames():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM frames")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [f"https://{bucket_name}.s3.amazonaws.com/{row[3]}" for row in rows]
+
+def delete_all_videos():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("DELETE FROM videos")
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def delete_all_frames():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("DELETE FROM frames")
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def delete_all_data():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("DELETE FROM NutritionalFacts")
+    cur.execute("DELETE FROM ObjectDetails")
+    cur.execute("DELETE FROM AnalysisResults")
+    cur.execute("DELETE FROM Frames")
+    cur.execute("DELETE FROM Videos")
+    conn.commit()
+    cur.close()
+    conn.close()
+    if os.path.exists("extracted_images"):
+        shutil.rmtree("extracted_images")
+    if os.path.exists("json_files"):
+        shutil.rmtree("json_files")
+    if os.path.exists("S3Downloads"):
+        shutil.rmtree("S3Downloads")
             
 def execute_insert_video(file, location):
     s3_key = upload_video_to_s3(file)

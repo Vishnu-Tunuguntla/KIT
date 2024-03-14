@@ -1,4 +1,21 @@
 body {
-    background-color: #333; /* Dark grey */
-    color: #fff; /* Optional: change the default text color to white for better contrast */
+  background-color: #333;
+  color: #fff;
+}
+
+.processing-queries-page {
+  margin-left: 220px;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 20px;
+}
+
+.query-buttons {
+  margin-bottom: 20px;
+}
+
+.query-result {
+  text-align: center;
 }
