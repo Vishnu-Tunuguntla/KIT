@@ -48,8 +48,8 @@ def download_video_from_s3(s3_key):
     s3.download_file(bucket_name, s3_key, file_path)
     return file_path
 
-# Uploads video to S3. Temporary method until Rasberry Pi is set up to upload videos to S3.
-def upload_video_to_s3(file_path):
+# Uploads video to S3. Uses File
+def upload_video_to_s3(file):
     """
     Uploads a video file to S3 and returns the key.
     
@@ -59,8 +59,8 @@ def upload_video_to_s3(file_path):
     Returns:
     The S3 key of the uploaded video.
     """
-    video_key = f"videos/{datetime.now().strftime('%Y-%m-%d')}/{file_path.split('/')[-1]}"
-    s3.upload_file(file_path, bucket_name, video_key)
+    video_key = f"videos/{datetime.now().strftime('%Y-%m-%d')}/{file.filename}"
+    s3.upload_fileobj(file, bucket_name, video_key)
     return video_key
 
 
@@ -393,8 +393,8 @@ def process_unprocessed_frames():
         except Exception as e:
             print(f"Error occurred while processing frame {frame_id}: {e}")
             
-def execute_insert_video(file_path, location):
-    s3_key = upload_video_to_s3(file_path)
+def execute_insert_video(file, location):
+    s3_key = upload_video_to_s3(file)
     insert_video_metadata(db_conn_params, location, s3_key, datetime.now(), True)
 
 def execute_process():
@@ -402,8 +402,3 @@ def execute_process():
     process_unprocessed_frames()
 
 
-# Example usage
-
-file_path = r"C:\Users\15715\Desktop\KITProj\KIT\backend\KitTools\Videos\flats_test.mp4"
-execute_insert_video(file_path, "DesktopPC")
-execute_process()   

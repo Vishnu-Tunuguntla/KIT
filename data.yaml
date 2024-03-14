@@ -1,6 +1,0 @@
-path: /Users/15715/Desktop/KitTools/Datasets/converted/kit.v1i.yolov8 
-train: images
-val: val/images
-
-names:
-  0: grocery
