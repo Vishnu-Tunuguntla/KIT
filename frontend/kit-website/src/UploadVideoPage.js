@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 
 function UploadVideoPage() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -18,6 +19,9 @@ function UploadVideoPage() {
       const response = await axios.post('http://127.0.0.1:5000/api/upload', formData);
       console.log(response.data.message);
       alert('Video uploaded successfully!');
+      // Clear the selected file and reset the file input
+      setSelectedFile(null);
+      fileInputRef.current.value = null;
     } catch (error) {
       console.error('Error uploading video:', error);
 
@@ -50,7 +54,7 @@ function UploadVideoPage() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <input type="file" onChange={handleFileChange} />
+      <input type="file" ref={fileInputRef} onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload Video</button>
     </div>
   );

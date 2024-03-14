@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 function DropdownBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const navigate = useNavigate(); // Use the useNavigate hook
+  const navigate = useNavigate();
 
   const navigateToUploadVideo = () => {
-    navigate('/upload-video'); // Use navigate instead of history.push
-    setIsOpen(false); // Close the dropdown menu
-    setIsVisible(false); // Hide the dropdown bar
+    navigate('/upload-video');
+    setIsOpen(false);
+    setIsVisible(false);
+  };
+
+  const navigateToHome = () => {
+    navigate('/'); // Navigate to the home page
+    setIsOpen(false);
+    setIsVisible(false);
   };
 
   return (
@@ -25,9 +31,11 @@ function DropdownBar() {
           {isOpen && (
             <ul className="dropdown-menu">
               <li>
+                <button onClick={navigateToHome}>Home</button> {/* Add navigation to home page */}
+              </li>
+              <li>
                 <button onClick={navigateToUploadVideo}>Upload Video</button>
               </li>
-              {/* Add more dropdown menu items as needed */}
             </ul>
           )}
         </div>

@@ -15,6 +15,7 @@ def upload_video():
     # Pass the video file to your existing Python method for processing and saving to the database
     try:
         process.execute_insert_video(video_file, "DesktopPC")
+        #process.execute_process()
         return jsonify({'message': 'Video uploaded successfully'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
