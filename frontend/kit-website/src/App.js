@@ -4,6 +4,7 @@ import DropdownBar from './DropdownBar';
 import './DropdownBar.css';
 import './App.css';
 import UploadVideoPage from './UploadVideoPage'; // Import the new component
+import CatalogPage from './CatalogPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <DropdownBar />
         <Routes> {/* Use Routes instead of Switch */}
           <Route path="/upload-video" element={<UploadVideoPage />} /> {/* Use element prop */}
+          <Route path = "/catalog-page" element = {<CatalogPage/>} />
           {/* Add other routes as needed */}
         </Routes>
       </div>
