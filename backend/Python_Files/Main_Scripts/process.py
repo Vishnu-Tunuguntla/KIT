@@ -10,6 +10,7 @@ from PIL import Image
 import os
 from gpt_classify import llm_classify
 import shutil
+import base64
 
 # PostgresSQL Connection Paramaters
 db_conn_params = {
@@ -348,6 +349,26 @@ def update_frame_as_processed(frame_id):
     cur.close()
     conn.close()
 
+def download_frame_from_s3(s3_key):
+    """
+    Downloads a frame from S3 and returns the local file path.
+    
+    Args:
+    - s3_key: The S3 key of the frame.
+    
+    Returns:
+    The local file path of the downloaded frame.
+    """
+    sanitized_filename = s3_key.replace("\\", "_").replace("/", "_").replace(":", "_")
+    local_frame_path = f"S3Downloads/{sanitized_filename}"
+
+    # Ensure the downloads directory exists
+    if not os.path.exists("S3Downloads"):
+        os.makedirs("S3Downloads")
+
+    s3.download_file(bucket_name, s3_key, local_frame_path)
+    return local_frame_path
+
 # Extracts frames from a video file using the YOLOv8 object detection model.
 def process_unprocessed_videos():
     """
@@ -386,15 +407,17 @@ def process_unprocessed_frames():
         frame_path = frame[3]
 
         try:
+            # Download the frame from S3
+            local_frame_path = download_frame_from_s3(frame_path)
+
             # Classify the frame using the llm_classify function
-            llm_classify(frame_path)
+            llm_classify(local_frame_path)
 
             # Update the frame as processed in the database
             update_frame_as_processed(frame_id)
 
         except Exception as e:
             print(f"Error occurred while processing frame {frame_id}: {e}")
-
 def query_all_videos():
     conn = psycopg2.connect(**db_conn_params)
     cur = conn.cursor()
@@ -429,8 +452,17 @@ def query_frames():
     rows = cur.fetchall()
     cur.close()
     conn.close()
-    return [f"https://{bucket_name}.s3.amazonaws.com/{row[3]}" for row in rows]
 
+    frame_data = []
+    for row in rows:
+        s3_key = row[3]
+        local_frame_path = download_frame_from_s3(s3_key)
+        with open(local_frame_path, 'rb') as file:
+            image_data = file.read()
+            base64_data = base64.b64encode(image_data).decode('utf-8')
+            frame_data.append(f"data:image/jpeg;base64,{base64_data}")
+
+    return frame_data
 def delete_all_videos():
     conn = psycopg2.connect(**db_conn_params)
     cur = conn.cursor()

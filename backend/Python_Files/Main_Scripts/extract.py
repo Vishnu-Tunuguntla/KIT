@@ -405,5 +405,4 @@ def execute_process():
 # Example usage
 
 file_path = r"C:\Users\15715\Desktop\KITProj\KIT\backend\KitTools\Videos\flats_test.mp4"
-execute_insert_video(file_path, "DesktopPC")
 execute_process()   

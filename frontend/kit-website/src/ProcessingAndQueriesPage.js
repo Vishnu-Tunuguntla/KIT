@@ -75,19 +75,18 @@ function ProcessingAndQueriesPage() {
           <div>
             <button onClick={handlePrevious}>Previous</button>
             <div className="media-container">
-              {queryResult[currentIndex].toLowerCase().endsWith('.jpg') ||
-              queryResult[currentIndex].toLowerCase().endsWith('.jpeg') ||
-              queryResult[currentIndex].toLowerCase().endsWith('.png') ? (
+              {queryResult[currentIndex].startsWith('data:image/') ? (
                 <img
                   src={queryResult[currentIndex]}
                   alt="Query Result"
                   onError={(e) => {
-                    e.target.onerror = null;
+                    console.error('Failed to load image:', queryResult[currentIndex]);
+                    e.target.onerror = null; // prevents looping
                     e.target.src = 'path/to/default/image.jpg';
                   }}
                 />
               ) : (
-                <video controls width="100%">
+                <video key={queryResult[currentIndex]} controls width="100%">
                   <source src={queryResult[currentIndex]} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
