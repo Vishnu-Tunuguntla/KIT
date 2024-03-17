@@ -4,7 +4,7 @@ import json
 import os
 
 # OpenAI API key
-api_key = "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"
+api_key = os.getenv("GPT_API_KEY")
 
 # Function to encode the image
 def encode_image(image_path):

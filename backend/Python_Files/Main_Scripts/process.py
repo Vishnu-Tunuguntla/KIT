@@ -11,6 +11,7 @@ import os
 from gpt_classify import llm_classify
 import shutil
 import base64
+import json
 
 # PostgresSQL Connection Paramaters
 db_conn_params = {
@@ -413,11 +414,32 @@ def process_unprocessed_frames():
             # Classify the frame using the llm_classify function
             llm_classify(local_frame_path)
 
+            # Get the JSON file path
+            json_file_path = os.path.join("json_files", os.path.splitext(os.path.basename(local_frame_path))[0] + ".json")
+
+            # Read the JSON data from the file
+            with open(json_file_path, "r") as json_file:
+                json_data = json.load(json_file)
+
+            # Insert the JSON data into the FoodItem table
+            insert_food_item(frame_id, json_data)
+
             # Update the frame as processed in the database
             update_frame_as_processed(frame_id)
 
         except Exception as e:
             print(f"Error occurred while processing frame {frame_id}: {e}")
+
+def insert_food_item(frame_id, json_data):
+    # SQL to insert food item
+    insert_query = """
+    INSERT INTO FoodItem (FrameID, Details)
+    VALUES (%s, %s)
+    """
+
+    with psycopg2.connect(**db_conn_params) as conn:
+        with conn.cursor() as cur:
+            cur.execute(insert_query, (frame_id, json.dumps(json_data)))
 def query_all_videos():
     conn = psycopg2.connect(**db_conn_params)
     cur = conn.cursor()
@@ -482,9 +504,7 @@ def delete_all_frames():
 def delete_all_data():
     conn = psycopg2.connect(**db_conn_params)
     cur = conn.cursor()
-    cur.execute("DELETE FROM NutritionalFacts")
-    cur.execute("DELETE FROM ObjectDetails")
-    cur.execute("DELETE FROM AnalysisResults")
+    cur.execute("DELETE FROM FoodItem")
     cur.execute("DELETE FROM Frames")
     cur.execute("DELETE FROM Videos")
     conn.commit()
