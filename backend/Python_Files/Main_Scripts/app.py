@@ -69,5 +69,22 @@ def execute_extraction_and_analysis():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/food-items', methods=['GET'])
+def get_food_items():
+    try:
+        food_items = process.get_food_items()
+        return jsonify(food_items)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/food-items/<int:item_id>', methods=['PUT'])
+def update_food_item(item_id):
+    try:
+        data = request.get_json()
+        process.update_food_item(item_id, data)
+        return jsonify({'message': 'Food item updated successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run()

@@ -440,6 +440,34 @@ def insert_food_item(frame_id, json_data):
     with psycopg2.connect(**db_conn_params) as conn:
         with conn.cursor() as cur:
             cur.execute(insert_query, (frame_id, json.dumps(json_data)))
+
+def get_food_items():
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM FoodItem")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    food_items = []
+    for row in rows:
+        food_item = {
+            'ItemID': row[0],
+            'FrameID': row[1],
+            'Details': row[2]
+        }
+        food_items.append(food_item)
+
+    return food_items
+
+def update_food_item(item_id, data):
+    conn = psycopg2.connect(**db_conn_params)
+    cur = conn.cursor()
+    cur.execute("UPDATE FoodItem SET Details = %s WHERE ItemID = %s", (json.dumps(data['Details']), item_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+    
 def query_all_videos():
     conn = psycopg2.connect(**db_conn_params)
     cur = conn.cursor()

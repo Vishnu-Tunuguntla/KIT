@@ -1,0 +1,52 @@
+.inventory-page {
+    display: flex;
+    margin-left: 220px;
+    padding: 20px;
+  }
+  
+  .scrollbar {
+    width: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-right: 20px;
+  }
+  
+  .food-item {
+    cursor: pointer;
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #f1f1f1;
+    color: #333;
+  }
+  
+  .food-item:hover {
+    background-color: #ddd;
+  }
+  
+  .details-table {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+  
+  .details-table input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .details-table button {
+    padding: 8px 16px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .details-table button:hover {
+    background-color: #45a049;
+  }

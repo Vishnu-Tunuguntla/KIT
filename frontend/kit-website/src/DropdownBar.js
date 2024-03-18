@@ -24,6 +24,12 @@ function DropdownBar() {
     setIsVisible(false);
   };
 
+  const navigateToInventory = () => {
+    navigate('/inventory');
+    setIsOpen(false);
+    setIsVisible(false);
+  };
+
   return (
     <>
       {isVisible && (
@@ -44,6 +50,9 @@ function DropdownBar() {
               </li>
               <li>
                 <button onClick={navigateToProcessingAndQueries}>Processing and Queries</button>
+              </li>
+              <li>
+                <button onClick={navigateToInventory}>Inventory</button>
               </li>
             </ul>
           )}
