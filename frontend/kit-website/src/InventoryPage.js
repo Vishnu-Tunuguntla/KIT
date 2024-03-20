@@ -4,6 +4,8 @@ import axios from 'axios';
 function InventoryPage() {
   const [foodItems, setFoodItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [userRequest, setUserRequest] = useState('');
+  const [gptResponse, setGptResponse] = useState('');
 
   useEffect(() => {
     fetchFoodItems();
@@ -56,6 +58,23 @@ function InventoryPage() {
       fetchFoodItems(); // Refetch the food items after saving changes
     } catch (error) {
       console.error('Error saving changes:', error);
+    }
+  };
+
+  const handleUserRequestChange = (event) => {
+    setUserRequest(event.target.value);
+  };
+
+  const handleSendRequest = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/api/gpt-request', { request: userRequest });
+      setGptResponse(response.data.answer);
+      setUserRequest('');
+    } catch (error) {
+      console.error('Error sending GPT request:', error);
+      if (error.response) {
+        console.error('Server responded with:', error.response.data);
+      }
     }
   };
 
@@ -196,6 +215,19 @@ function InventoryPage() {
           <button onClick={handleSaveChanges}>Save</button>
         </div>
       )}
+      <div className="helper-box">
+        <textarea
+          value={userRequest}
+          onChange={handleUserRequestChange}
+          placeholder="Type your request here..."
+        ></textarea>
+        <button onClick={handleSendRequest}>Send Request</button>
+        {gptResponse && (
+          <div className="gpt-response">
+            <p>{gptResponse}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,52 +1,100 @@
 .inventory-page {
-    display: flex;
-    margin-left: 220px;
-    padding: 20px;
-  }
-  
-  .scrollbar {
-    width: 200px;
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-right: 20px;
-  }
-  
-  .food-item {
-    cursor: pointer;
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #f1f1f1;
-    color: #333;
-  }
-  
-  .food-item:hover {
-    background-color: #ddd;
-  }
-  
-  .details-table {
-    flex: 1;
-    padding: 20px;
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #ccc;
-  }
-  
-  .details-table input {
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .details-table button {
-    padding: 8px 16px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .details-table button:hover {
-    background-color: #45a049;
-  }
+  display: flex;
+  margin-left: 220px;
+  padding: 20px;
+}
+
+.scrollbar {
+  width: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-right: 20px;
+}
+
+.food-item {
+  cursor: pointer;
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.food-item:hover {
+  background-color: #ddd;
+}
+
+.details-table {
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.details-table input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.details-table button {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.details-table button:hover {
+  background-color: #45a049;
+}
+
+.helper-box {
+  position: fixed;
+  bottom: 0;
+  left: 220px;
+  right: 0;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.helper-box textarea {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.helper-box button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  align-self: flex-start;
+}
+
+.helper-box button:hover {
+  background-color: #45a049;
+}
+
+.gpt-response {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333;
+}

@@ -39,37 +39,43 @@ def get_food_item_names_and_brands():
 
 # Function to answer the user request based on food item names and brands
 def answer_request(food_items, request):
-    food_item_names_and_brands = [f"{item[0]} ({item[1]})" for item in food_items]
-    food_item_names_and_brands_str = ', '.join(food_item_names_and_brands)
+    try:
+        food_item_names_and_brands = [f"{item[0]} ({item[1]})" for item in food_items]
+        food_item_names_and_brands_str = ', '.join(food_item_names_and_brands)
 
-    response = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": f"You are a helpful assistant that answers requests based on the provided food item names and brands."
-            },
-            {
-                "role": "user",
-                "content": f"Food items: {food_item_names_and_brands_str}\nRequest: {request}"
-            }
-        ],
-        model="gpt-3.5-turbo",
-    )
+        response = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"You are a helpful assistant that answers requests based on the provided food item names and brands."
+                },
+                {
+                    "role": "user",
+                    "content": f"Food items: {food_item_names_and_brands_str}\nRequest: {request}"
+                }
+            ],
+            model="gpt-3.5-turbo",
+        )
 
-    answer = response.choices[0].message.content.strip()
-    return answer
+        answer = response.choices[0].message.content.strip()
+        return answer
+    except Exception as e:
+        print(f"Error in answer_request: {e}")
+        raise e
 
-# Main script
 if __name__ == "__main__":
-    # Retrieve food item names and brands from the database
-    food_items = get_food_item_names_and_brands()
+    try:
+        # Retrieve food item names and brands from the database
+        food_items = get_food_item_names_and_brands()
 
-    if food_items:
-        # Get the user request
-        request = input("Enter your request: ")
+        if food_items:
+            # Get the user request
+            request = input("Enter your request: ")
 
-        # Answer the request based on the food item names and brands
-        answer = answer_request(food_items, request)
-        print(answer)
-    else:
-        print("No food items found in the database.")
+            # Answer the request based on the food item names and brands
+            answer = answer_request(food_items, request)
+            print(answer)
+        else:
+            print("No food items found in the database.")
+    except Exception as e:
+        print(f"Error in main script: {e}")

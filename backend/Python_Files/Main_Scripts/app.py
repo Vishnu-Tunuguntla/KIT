@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import process
+import gpt_recipes
 
 app = Flask(__name__)
 CORS(app)
@@ -86,5 +87,20 @@ def update_food_item(item_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/gpt-request', methods=['POST'])
+def handle_gpt_request():
+    try:
+        user_request = request.json['request']
+        
+        # Retrieve food item names and brands from the database
+        food_items = process.get_food_item_names_and_brands()
+        
+        # Answer the request based on the food item names and brands
+        answer = process.answer_request(food_items, user_request)
+        
+        return jsonify({'answer': answer})
+    except Exception as e:
+        print(f"Error in handle_gpt_request: {e}")
+        return jsonify({'error': str(e)}), 500
 if __name__ == '__main__':
     app.run()
