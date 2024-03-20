@@ -27,6 +27,6 @@
   
   .media-container img,
   .media-container video {
-    width: 100%;
+    width: 50%;
     height: auto;
   }

@@ -20,6 +20,7 @@ function ProcessingAndQueriesPage() {
   const handleDelete = async (endpoint) => {
     try {
       await axios.delete(`http://127.0.0.1:5000/api/${endpoint}`);
+      handleClear()
       alert('Deletion successful!');
     } catch (error) {
       console.error('Error deleting data:', error);
@@ -74,6 +75,7 @@ function ProcessingAndQueriesPage() {
         ) : (
           <div>
             <button onClick={handlePrevious}>Previous</button>
+            <button onClick={handleNext}>Next</button>
             <div className="media-container">
               {queryResult[currentIndex].startsWith('data:image/') ? (
                 <img
@@ -92,7 +94,6 @@ function ProcessingAndQueriesPage() {
                 </video>
               )}
             </div>
-            <button onClick={handleNext}>Next</button>
           </div>
         )}
       </div>
