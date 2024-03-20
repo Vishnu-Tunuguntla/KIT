@@ -31,6 +31,8 @@ s3 = boto3.client(
 )
 bucket_name = 'kitbucketaws'
 
+#OpenAI API Key
+
 api_key = os.getenv("GPT_API_KEY")
 client = OpenAI(api_key=api_key)
 
@@ -72,7 +74,7 @@ def answer_request(food_items, request):
                     "content": f"Food items: {food_item_names_and_brands_str}\nRequest: {request}"
                 }
             ],
-            model="gpt-3.5-turbo",
+            model="gpt-4",
         )
 
         answer = response.choices[0].message.content.strip()
