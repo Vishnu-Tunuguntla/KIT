@@ -101,5 +101,17 @@ def handle_gpt_request():
     except Exception as e:
         print(f"Error in handle_gpt_request: {e}")
         return jsonify({'error': str(e)}), 500
+@app.route('/api/recipe-request', methods=['POST'])
+def handle_recipe_request():
+    print("Recipe request received")  # Debug print
+    try:
+        ingredients = request.json['items']
+        print("Ingredients:", ingredients)  # Debug print
+        recipe = process.get_recipe_from_ingredients(ingredients)
+        return jsonify({'recipe': recipe})
+    except Exception as e:
+        print(f"Error in handle_recipe_request: {e}")
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run()

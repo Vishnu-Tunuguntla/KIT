@@ -82,6 +82,36 @@ def answer_request(food_items, request):
     except Exception as e:
         print(f"Error in answer_request: {e}")
         raise e
+def get_recipe_from_ingredients(ingredients):
+    try:
+        # Convert the list of ingredients into a comma-separated string
+        ingredients_str = ', '.join(ingredients)
+
+        # Construct the prompt to ask GPT for a recipe using the provided ingredients
+        prompt = f"Given the ingredients: {ingredients_str}, give a recipe with instructions and measurements."
+
+        # Call the OpenAI API with the constructed prompt
+        response = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a creative chef who invents recipes based on the ingredients provided."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            model="gpt-4",
+        )
+
+        # Extract and return the response from GPT
+        answer = response.choices[0].message.content.strip()
+        return answer
+    except Exception as e:
+        print(f"Error in get_recipe_from_ingredients: {e}")
+        raise e
+
 
 # Downloads a video file from S3 and returns the file path.
 def download_video_from_s3(s3_key):
@@ -605,5 +635,3 @@ def execute_insert_video(file, location):
 def execute_process():
     process_unprocessed_videos()
     process_unprocessed_frames()
-
-

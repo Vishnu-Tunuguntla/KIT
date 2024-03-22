@@ -6,6 +6,10 @@ function InventoryPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [userRequest, setUserRequest] = useState('');
   const [gptResponse, setGptResponse] = useState('');
+  const [recipeList, setRecipeList] = useState([]);
+  const [recipe, setRecipe] = useState('');
+
+
 
   useEffect(() => {
     fetchFoodItems();
@@ -72,25 +76,52 @@ function InventoryPage() {
       setUserRequest('');
     } catch (error) {
       console.error('Error sending GPT request:', error);
-      if (error.response) {
-        console.error('Server responded with:', error.response.data);
-      }
+      // Handle error response...
     }
   };
+
+  const handleRecipeRequest = async () => {
+    try {
+      const recipeItemNames = recipeList.map(item => item.Details.name);
+      
+      const response = await axios.post('http://127.0.0.1:5000/api/recipe-request', { items: recipeItemNames });
+      setRecipe(response.data.recipe); // Assuming the backend sends back a field named 'recipe'
+      // Optionally clear the recipe list after getting the recipe
+      setRecipeList([]);
+    } catch (error) {
+      console.error('Error sending recipe request:', error);
+      // Optionally handle and display error to the user
+    }
+  };
+  
+  
+  
+
+  const addToRecipeList = (item) => {
+    setRecipeList((currentList) => [...currentList, item]);
+  };
+
+  const removeFromRecipeList = (indexToRemove) => {
+    setRecipeList((currentList) => currentList.filter((_, index) => index !== indexToRemove));
+  };
+  
 
   return (
     <div className="inventory-page">
       <div className="scrollbar">
-        {foodItems.map((item) => (
-          <div
-            key={item.ItemID}
-            className="food-item"
-            onClick={() => handleItemClick(item)}
-          >
-            {item.Details.brand} - {item.Details.name}
+        {foodItems.map((item, index) => (
+          <div key={index} className="food-item">
+            <span onClick={() => handleItemClick(item)}>
+              {item.Details.brand} - {item.Details.name}
+            </span>
+            <button onClick={(e) => {
+              e.stopPropagation();
+              addToRecipeList(item);
+            }}>+</button>
           </div>
         ))}
       </div>
+  
       {selectedItem && (
         <div className="details-table">
           <input
@@ -215,21 +246,38 @@ function InventoryPage() {
           <button onClick={handleSaveChanges}>Save</button>
         </div>
       )}
-      <div className="helper-box">
-        <textarea
-          value={userRequest}
-          onChange={handleUserRequestChange}
-          placeholder="Type your request here..."
-        ></textarea>
-        <button onClick={handleSendRequest}>Send Request</button>
-        {gptResponse && (
-          <div className="gpt-response">
-            <p>{gptResponse}</p>
-          </div>
-        )}
-      </div>
+      <div>
+      <h4>Recipe List:</h4>
+      {recipeList.map((item, index) => (
+        <div key={index} className="food-item" style={{ justifyContent: 'space-between' }}>
+          <span>{item.Details.name}</span>
+          <button onClick={() => removeFromRecipeList(index)} style={{ marginLeft: '10px' }}>X</button>
+        </div>
+      ))}
+      <button onClick={handleRecipeRequest}>Get Recipe</button>
+      {recipe && (
+        <div className="recipe-display">
+          <h3>Recipe</h3>
+          <p>{recipe}</p>
+        </div>
+      )}
     </div>
-  );
+
+    <div className="helper-box">
+      <textarea
+        value={userRequest}
+        onChange={handleUserRequestChange}
+        placeholder="Type your request here..."
+      ></textarea>
+      <button onClick={handleSendRequest}>Send Request</button>
+      {gptResponse && (
+        <div className="gpt-response">
+          <p>{gptResponse}</p>
+        </div>
+      )}
+    </div>
+  </div>
+);
 }
 
 export default InventoryPage;

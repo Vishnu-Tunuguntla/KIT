@@ -1,16 +1,19 @@
 .inventory-page {
   display: flex;
+  flex-direction: column; /* Changed to column to stack content vertically */
   margin-left: 220px;
   padding: 20px;
+  height: calc(100vh - 40px); /* Adjust height to fill viewport minus padding */
+  box-sizing: border-box; /* Include padding in height calculation */
 }
 
-.scrollbar {
-  width: 200px;
-  max-height: 400px;
-  overflow-y: auto;
+.scrollbar, .recipe-display {
+  width: 200px; /* Adjust width as needed */
+  max-height: 200px; /* Adjust max-height as needed for scrollbar */
+  overflow-y: auto; /* Enable vertical scrolling */
   border: 1px solid #ccc;
   padding: 10px;
-  margin-right: 20px;
+  margin-bottom: 20px; /* Ensure space between sections */
 }
 
 .food-item {
@@ -25,76 +28,56 @@
   background-color: #ddd;
 }
 
-.details-table {
+.details-table, .helper-box {
   flex: 1;
   padding: 20px;
   background-color: #fff;
   color: #333;
   border: 1px solid #ccc;
   margin-bottom: 20px;
+  overflow-y: auto; /* Enable scrolling within these containers */
 }
 
-.details-table input {
+.details-table input, .helper-box textarea, .helper-box button {
   width: 100%;
   padding: 5px;
   margin-bottom: 5px;
   font-size: 14px;
+  border-radius: 4px; /* Rounded corners for inputs and buttons */
 }
 
-.details-table button {
-  padding: 8px 16px;
+.details-table button, .helper-box button {
   background-color: #4caf50;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-.details-table button:hover {
+.details-table button:hover, .helper-box button:hover {
   background-color: #45a049;
 }
 
+/* Adjust the fixed position of helper-box to accommodate scrolling */
 .helper-box {
-  position: fixed;
-  bottom: 0;
-  left: 220px;
-  right: 0;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-top: 1px solid #ccc;
-  display: flex;
-  flex-direction: column;
+  position: relative; /* Changed from fixed to relative */
+  padding-bottom: 20px; /* Extra padding at the bottom */
+  max-height: 20vh; /* Adjust the height as needed */
+  overflow-y: auto; /* Allow scrolling within the helper box */
 }
 
-.helper-box textarea {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  resize: vertical;
-  margin-bottom: 10px;
-}
-
-.helper-box button {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  align-self: flex-start;
-}
-
-.helper-box button:hover {
-  background-color: #45a049;
-}
-
-.gpt-response {
-  margin-top: 10px;
-  padding: 10px;
+.gpt-response, .recipe-display {
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
   color: #333;
+  padding: 10px;
+  margin-bottom: 10px; /* Space between response and other elements */
+}
+
+/* Additional Styles for Recipe Display */
+.recipe-display {
+  background-color: #f9f9f9; /* Slightly different background for distinction */
+  padding: 20px;
+  margin-bottom: 20px; /* Ensure space below the recipe display */
 }
