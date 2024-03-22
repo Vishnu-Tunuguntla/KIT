@@ -1,0 +1,21 @@
+{
+    "name": "Pita Crackers",
+    "brand": "John Wm. Macy's",
+    "category": "Snack Foods",
+    "nutrition_facts": {
+        "serving_size": null,
+        "calories": null,
+        "total_fat": null,
+        "saturated_fat": null,
+        "trans_fat": null,
+        "cholesterol": null,
+        "sodium": null,
+        "total_carbohydrates": null,
+        "dietary_fiber": null,
+        "sugars": null,
+        "protein": null
+    },
+    "ingredients": null,
+    "expiration_date": null,
+    "quantity": "5 oz (141g)"
+}

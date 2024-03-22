@@ -1,0 +1,21 @@
+{
+    "name": "Cookie Thins Toasted Coconut",
+    "brand": "Benton's",
+    "category": "Cookies",
+    "nutrition_facts": {
+        "serving_size": "Per 5 Cookies",
+        "calories": "150",
+        "total_fat": "8g",
+        "saturated_fat": null,
+        "trans_fat": null,
+        "cholesterol": null,
+        "sodium": null,
+        "total_carbohydrates": "18g",
+        "dietary_fiber": null,
+        "sugars": "9g",
+        "protein": null
+    },
+    "ingredients": null,
+    "expiration_date": null,
+    "quantity": "NET WT 4 OZ (113g)"
+}

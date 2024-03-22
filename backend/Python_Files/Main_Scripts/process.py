@@ -206,7 +206,13 @@ def update_videos_as_processed(videos):
 # Extracts frames using a video path and accounts for duplicates using hash comparison and blur using variance of Laplacian.
 def extract_frames_from_video(video_path):
     # Load the custom YOLO model
-    model = YOLO('backend/Python_Files/Main_Scripts/best.pt')
+    try:
+        # Load the custom YOLO model
+        print("ran function")
+        model = YOLO('best.pt')
+        print("got model")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
     # Set the confidence threshold for object detection, higher values mean less false positives
     confidence_threshold = 0.85
@@ -227,6 +233,7 @@ def extract_frames_from_video(video_path):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
+
     # Initialize a list to store the detected objects
     detected_objects = []
 
@@ -239,9 +246,11 @@ def extract_frames_from_video(video_path):
     # Open the video file
     cap = cv2.VideoCapture(video_path)
 
+
     # Get the video frame rate and total number of frames
     fps = cap.get(cv2.CAP_PROP_FPS)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
 
     # Initialize the frame counter
     frame_count = 0
@@ -251,6 +260,7 @@ def extract_frames_from_video(video_path):
 
     # Iterate through the video frames
     while cap.isOpened():
+        print("started loop")
         # Read a frame from the video
         ret, frame = cap.read()
 
@@ -263,6 +273,8 @@ def extract_frames_from_video(video_path):
 
         # Run object detection on the frame
         results = model(frame)
+
+        print("successfully ran object detection")
 
         # Check if there are any detected objects
         if len(results) > 0:
@@ -434,22 +446,28 @@ def process_unprocessed_videos():
     # Update the videos as processed in the database
     update_videos_as_processed(unprocessed_videos)
 
+
     # Process each unprocessed video
     for video in unprocessed_videos:
         video_id = video[0]
         s3_key = video[3]
 
+
         # Download the video from S3
         video_path = download_video_from_s3(s3_key)
+
 
         # Extract frames from the video using the logic from frame_extract_advanced.py
         extracted_frames = extract_frames_from_video(video_path)
 
+
         # Insert the extracted frames into the database
         insert_frames_into_database(video_id, extracted_frames)
 
+
         # Upload the extracted frames to S3
         upload_frames_to_s3(extracted_frames)
+
 
 def process_unprocessed_frames():
     # Query all unprocessed frames from the database

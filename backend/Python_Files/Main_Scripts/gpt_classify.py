@@ -59,7 +59,9 @@ def llm_classify(image_path):
 
     try:
         response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+        print("this is where the error arises")
         response.raise_for_status()  # Raise an exception for 4xx or 5xx status codes
+        print("GOT HERE")
         response_text = response.json()["choices"][0]["message"]["content"]
 
         # Remove extra characters from the response text

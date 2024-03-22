@@ -1,0 +1,21 @@
+{
+    "name": "Bisquick Pancake & Baking Mix",
+    "brand": "Betty Crocker",
+    "category": "Pancake and Baking Mix",
+    "nutrition_facts": {
+        "serving_size": "1/3 cup mix (40g) as packaged",
+        "calories": "140",
+        "total_fat": "2.5g",
+        "saturated_fat": "1g",
+        "trans_fat": "0g",
+        "cholesterol": "0mg",
+        "sodium": "370mg",
+        "total_carbohydrates": "27g",
+        "dietary_fiber": "1g",
+        "sugars": "2g",
+        "protein": "3g"
+    },
+    "ingredients": null,
+    "expiration_date": null,
+    "quantity": "40 oz (2 lb 8 oz) 1.13kg"
+}
