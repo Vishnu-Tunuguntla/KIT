@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Alert, Platform, PermissionsAndroid, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 import axios from 'axios';
 
 const UploadVideoPage = () => {
@@ -23,19 +23,25 @@ const UploadVideoPage = () => {
         return;
       }
     }
-
-    launchImageLibrary({ mediaType: 'video' }, (response) => {
-      if (response.didCancel) {
+  
+    try {
+      const result = await launchImageLibrary({ mediaType: 'video' });
+      if (result.didCancel) {
         console.log('User cancelled video picker');
-      } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
-      } else {
-        const source = { uri: response.assets[0].uri };
+      } else if (result.errorCode) {
+        console.log('ImagePicker Error: ', result.errorMessage);
+      } else if (result.assets && result.assets.length > 0) {
+        const source = { uri: result.assets[0].uri };
         console.log(source);
         setSelectedFile(source);
       }
-    });
+    } catch (error) {
+      console.error('Error selecting the video:', error);
+      Alert.alert('Error', 'Could not select the video. Please try again.');
+    }
   };
+
+  
 
   const handleUpload = async () => {
     if (!selectedFile) return;
