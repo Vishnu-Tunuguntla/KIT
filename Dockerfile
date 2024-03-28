@@ -1,15 +1,18 @@
 FROM python:3.11.4
 
-WORKDIR /backend
+RUN apt-get update && apt-get install -y libgl1-mesa-glx && rm -rf /var/lib/apt/lists/*
 
-COPY backend/ /backend/
+COPY /backend/Python_Files/Main_Scripts /app/backend/
+WORKDIR /app/backend
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENV OPENAI_API_KEY=
-
 EXPOSE 5000
 
-ENV FLASK_APP=app.py
+CMD ["python", "app.py"]
 
-CMD ["flask", "run", "--host=0.0.0.0"]
+
+#Envrionment Variables to be set:
+#GPT_API_KEY
+#FRONTEND_HOST --> http://localhost:3000 
+#REACT_APP_BACKEND_HOST --> http://localhost:5000

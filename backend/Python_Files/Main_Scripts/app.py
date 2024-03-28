@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import process
+import os
 
 app = Flask(__name__)
-CORS(app)
+frontend_host = os.environ.get('FRONTEND_HOST') 
+CORS(app, resources={r"/api/*": {"origins": [frontend_host]}})
 
 @app.route('/api/upload', methods=['POST'])
 def upload_video():

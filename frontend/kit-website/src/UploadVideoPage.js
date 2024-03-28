@@ -4,6 +4,7 @@ import axios from 'axios';
 function UploadVideoPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
+  const backendHost = process.env.REACT_APP_BACKEND_HOST || "http://localhost:5000";
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -16,7 +17,7 @@ function UploadVideoPage() {
     formData.append('video', selectedFile);
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/upload', formData);
+      const response = await axios.post(`${backendHost}/api/upload`, formData);
       console.log(response.data.message);
       alert('Video uploaded successfully!');
       // Clear the selected file and reset the file input

@@ -5,10 +5,11 @@ import './ProcessingAndQueriesPage.css';
 function ProcessingAndQueriesPage() {
   const [queryResult, setQueryResult] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const backendHost = process.env.REACT_APP_BACKEND_HOST || "http://localhost:5000";
 
   const handleQuery = async (endpoint) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/api/${endpoint}`);
+      const response = await axios.get(`${backendHost}/api/${endpoint}`);
       setQueryResult(response.data);
       setCurrentIndex(0);
     } catch (error) {
@@ -19,7 +20,7 @@ function ProcessingAndQueriesPage() {
 
   const handleDelete = async (endpoint) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/${endpoint}`);
+      await axios.delete(`${backendHost}/api/${endpoint}`);
       handleClear()
       alert('Deletion successful!');
     } catch (error) {
@@ -28,9 +29,9 @@ function ProcessingAndQueriesPage() {
     }
   };
 
-  const handleExecute = async () => {
+  const handleExecute = async (endpoint) => {
     try {
-      await axios.post('http://127.0.0.1:5000/api/execute');
+      await axios.post(`${backendHost}/api/${endpoint}`);
       alert('Extraction and analysis executed successfully!');
     } catch (error) {
       console.error('Error executing extraction and analysis:', error);
@@ -64,7 +65,7 @@ function ProcessingAndQueriesPage() {
         <button onClick={() => handleDelete('delete-all-videos')}>Delete All Videos</button>
         <button onClick={() => handleDelete('delete-all-frames')}>Delete All Frames</button>
         <button onClick={() => handleDelete('delete-all-data')}>Delete All Data</button>
-        <button onClick={handleExecute}>Execute Extraction and Analysis</button>
+        <button onClick={() => handleExecute('execute')}>Execute Extraction and Analysis</button>
         <button onClick={handleClear}>Clear</button>
       </div>
       <div className="query-result">

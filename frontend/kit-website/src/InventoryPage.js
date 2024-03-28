@@ -8,6 +8,7 @@ function InventoryPage() {
   const [gptResponse, setGptResponse] = useState('');
   const [recipeList, setRecipeList] = useState([]);
   const [recipe, setRecipe] = useState('');
+  const backendHost = process.env.REACT_APP_BACKEND_HOST || "http://localhost:5000";
 
 
 
@@ -17,7 +18,7 @@ function InventoryPage() {
 
   const fetchFoodItems = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/api/food-items');
+      const response = await axios.get(`${backendHost}/api/food-items`);
       setFoodItems(response.data);
     } catch (error) {
       console.error('Error fetching food items:', error);
@@ -57,7 +58,7 @@ function InventoryPage() {
 
   const handleSaveChanges = async () => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/food-items/${selectedItem.ItemID}`, selectedItem);
+      await axios.put(`${backendHost}/api/food-items/${selectedItem.ItemID}`, selectedItem);
       console.log('Changes saved successfully');
       fetchFoodItems(); // Refetch the food items after saving changes
     } catch (error) {
@@ -71,7 +72,7 @@ function InventoryPage() {
 
   const handleSendRequest = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/gpt-request', { request: userRequest });
+      const response = await axios.post(`${backendHost}/api/gpt-request`, { request: userRequest });
       setGptResponse(response.data.answer);
       setUserRequest('');
     } catch (error) {
@@ -84,7 +85,7 @@ function InventoryPage() {
     try {
       const recipeItemNames = recipeList.map(item => item.Details.name);
       
-      const response = await axios.post('http://127.0.0.1:5000/api/recipe-request', { items: recipeItemNames });
+      const response = await axios.post(`${backendHost}/api/recipe-request`, { items: recipeItemNames });
       setRecipe(response.data.recipe); // Assuming the backend sends back a field named 'recipe'
       // Optionally clear the recipe list after getting the recipe
       setRecipeList([]);
