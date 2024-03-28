@@ -2,18 +2,27 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function InventoryPage() {
-  const [foodItems, setFoodItems] = useState([]);
+
+  const mockFoodItems = [
+    { id: 1, Details: { name: 'Peanut Butter', brand: "Jiff's", ingredients: 'peanuts, sugar, salt' } },
+    { id: 2, Details: { name: 'Jelly', brand: "Jam", ingredients: 'grapes, sugar, pectin' } },
+    // Add more items as needed
+  ];
+  const [foodItems, setFoodItems] = useState(mockFoodItems);
   const [selectedItem, setSelectedItem] = useState(null);
   const [userRequest, setUserRequest] = useState('');
   const [gptResponse, setGptResponse] = useState('');
   const [recipeList, setRecipeList] = useState([]);
   const [recipe, setRecipe] = useState('');
+  const [allergens, setAllergens] = useState([])
 
 
 
   useEffect(() => {
     fetchFoodItems();
   }, []);
+
+  
 
   const fetchFoodItems = async () => {
     try {
@@ -97,14 +106,32 @@ function InventoryPage() {
   
   
 
-  const addToRecipeList = (item) => {
-    setRecipeList((currentList) => [...currentList, item]);
-  };
-
   const removeFromRecipeList = (indexToRemove) => {
     setRecipeList((currentList) => currentList.filter((_, index) => index !== indexToRemove));
   };
-  
+
+  // ... (other component code)
+
+const handleAddAllergen = (event) => {
+  event.preventDefault();
+  const allergen = event.target.allergen.value.trim();
+  if (allergen && !allergens.includes(allergen)) {
+    setAllergens(currentAllergens => [...currentAllergens, allergen]);
+    event.target.allergen.value = ''; // Reset input after adding
+  }
+};
+
+const addToRecipeList = (item) => {
+  // Check for allergens in the item's ingredients
+  const itemIngredients = item.Details.ingredients.toLowerCase();
+  const containsAllergen = allergens.some(allergen => itemIngredients.includes(allergen.toLowerCase()));
+
+  if (containsAllergen) {
+    alert('Warning: May contain allergen!');
+  } else {
+    setRecipeList(currentList => [...currentList, item]);
+  }
+};
 
   return (
     <div className="inventory-page">
@@ -246,7 +273,29 @@ function InventoryPage() {
           <button onClick={handleSaveChanges}>Save</button>
         </div>
       )}
-      <div>
+    {/* Allergen Input Form */}
+    <div className="allergen-section">
+      <form onSubmit={handleAddAllergen} className="allergen-form">
+        <input
+          type="text"
+          name="allergen"
+          placeholder="Add allergen"
+          className="allergen-input"
+        />
+        <button type="submit" className="allergen-submit">Add</button>
+      </form>
+
+      {/* Allergens List */}
+      <div className="allergen-list">
+        <h4>Allergens:</h4>
+        <div className="allergen-items">
+          {allergens.map((allergen, index) => (
+            <span key={index} className="allergen-item">{allergen}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div>
       <h4>Recipe List:</h4>
       {recipeList.map((item, index) => (
         <div key={index} className="food-item" style={{ justifyContent: 'space-between' }}>
