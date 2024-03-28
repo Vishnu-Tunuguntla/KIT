@@ -1,0 +1,67 @@
+{
+    "name": "Shin Ramyun Noodle Soup",
+    "brand": "Nongshim",
+    "category": "Instant Noodles",
+    "nutrition_facts": {
+        "serving_size": "1/2 bag (56g)",
+        "calories": {
+            "per_serving": "260",
+            "per_container": "510"
+        },
+        "total_fat": {
+            "per_serving": "9g",
+            "per_container": "18g"
+        },
+        "saturated_fat": {
+            "per_serving": "4.5g",
+            "per_container": "9g"
+        },
+        "trans_fat": {
+            "per_serving": "0g",
+            "per_container": "0g"
+        },
+        "cholesterol": {
+            "per_serving": "0mg",
+            "per_container": "0mg"
+        },
+        "sodium": {
+            "per_serving": "1080mg",
+            "per_container": "2160mg"
+        },
+        "total_carbohydrates": {
+            "per_serving": "35g",
+            "per_container": "70g"
+        },
+        "dietary_fiber": {
+            "per_serving": "2g",
+            "per_container": "4g"
+        },
+        "sugars": {
+            "per_serving": "1g",
+            "per_container": "2g"
+        },
+        "protein": {
+            "per_serving": "5g",
+            "per_container": "10g"
+        },
+        "vitamin_d": {
+            "per_serving": "0%",
+            "per_container": "0%"
+        },
+        "calcium": {
+            "per_serving": "20mg",
+            "per_container": "40mg"
+        },
+        "iron": {
+            "per_serving": "1.9mg",
+            "per_container": "3.8mg"
+        },
+        "potassium": {
+            "per_serving": "190mg",
+            "per_container": "380mg"
+        }
+    },
+    "ingredients": null,
+    "expiration_date": null,
+    "quantity": null
+}
