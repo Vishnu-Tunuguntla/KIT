@@ -1,83 +1,41 @@
+/* Existing styles remain unchanged */
+
+
 .inventory-page {
-  display: flex;
-  flex-direction: column; /* Changed to column to stack content vertically */
-  margin-left: 220px;
-  padding: 20px;
-  height: calc(100vh - 40px); /* Adjust height to fill viewport minus padding */
-  box-sizing: border-box; /* Include padding in height calculation */
+  padding-top: 60px; /* Increase top padding to push content below the nav bar */
+  /* Other styles remain unchanged */
 }
 
-.scrollbar, .recipe-display {
-  width: 200px; /* Adjust width as needed */
-  max-height: 200px; /* Adjust max-height as needed for scrollbar */
-  overflow-y: auto; /* Enable vertical scrolling */
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 20px; /* Ensure space between sections */
-}
-
-.food-item {
+/* Styling for the Recipe button */
+.recipe-button {
+  display: block; /* Make the button take the full container width */
+  width: 100%; /* Ensure it stretches to fill its container */
+  padding: 10px 0; /* More padding for a larger, easier to click button */
+  background-color: #4caf50; /* Consistent with other buttons */
+  color: white;
+  font-size: 18px; /* Larger font size for clarity */
+  border: none;
+  border-radius: 8px; /* Rounded corners for a modern look */
   cursor: pointer;
-  padding: 5px;
-  margin-bottom: 5px;
-  background-color: #f1f1f1;
-  color: #333;
+  margin-top: 20px; /* Space it out from the list above */
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-.food-item:hover {
-  background-color: #ddd;
+.recipe-button:hover {
+  background-color: #388e3c;
+  transform: scale(1.05);
 }
 
-.details-table, .helper-box {
-  flex: 1;
-  padding: 20px;
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-  overflow-y: auto; /* Enable scrolling within these containers */
-}
-
-.details-table input, .helper-box textarea, .helper-box button {
-  width: 100%;
-  padding: 5px;
-  margin-bottom: 5px;
-  font-size: 14px;
-  border-radius: 4px; /* Rounded corners for inputs and buttons */
-}
-
-.details-table button, .helper-box button {
-  background-color: #4caf50;
+/* Adjust the removal button within the recipe list for consistency */
+.food-item button {
+  background-color: #ff6347; /* A contrasting color for delete/remove */
   color: white;
   border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.details-table button:hover, .helper-box button:hover {
-  background-color: #45a049;
-}
-
-/* Adjust the fixed position of helper-box to accommodate scrolling */
-.helper-box {
-  position: relative; /* Changed from fixed to relative */
-  padding-bottom: 20px; /* Extra padding at the bottom */
-  max-height: 20vh; /* Adjust the height as needed */
-  overflow-y: auto; /* Allow scrolling within the helper box */
-}
-
-.gpt-response, .recipe-display {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  color: #333;
-  padding: 10px;
-  margin-bottom: 10px; /* Space between response and other elements */
-}
-
-/* Additional Styles for Recipe Display */
-.recipe-display {
-  background-color: #f9f9f9; /* Slightly different background for distinction */
-  padding: 20px;
-  margin-bottom: 20px; /* Ensure space below the recipe display */
+.food-item button:hover {
+  background-color: #e55347;
 }

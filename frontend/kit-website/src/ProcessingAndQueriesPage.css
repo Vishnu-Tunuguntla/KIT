@@ -1,32 +1,72 @@
 .processing-queries-page {
-    margin-left: 220px;
-    padding: 20px;
-  }
-  
-  .page-header {
-    margin-bottom: 20px;
-  }
-  
-  .query-buttons {
-    margin-bottom: 20px;
-  }
-  
-  .query-buttons button {
-    margin-right: 10px;
-  }
-  
-  .query-result {
-    text-align: center;
-  }
-  
-  .media-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .media-container img,
-  .media-container video {
-    width: 50%;
-    height: auto;
-  }
+  margin-left: 220px; /* Adjusted to account for the navigation bar width */
+  padding: 20px;
+  color: #4caf50; /* Primary text color */
+  text-align: center; /* Ensures text elements are centered */
+}
+
+.page-header {
+  margin-bottom: 20px;
+  /* No additional changes needed here as text-align: center; from the parent will center the header */
+}
+
+.button-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Adds spacing between buttons */
+  justify-content: center; /* Centers buttons horizontally */
+  margin-bottom: 20px; /* Separates each button section from the next */
+}
+
+.button-section button, .navigation-buttons button {
+  padding: 15px 30px; /* Increases padding to make buttons larger */
+  font-size: 18px; /* Increases font size for better readability */
+  background-color: #4caf50; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Removes default border */
+  border-radius: 8px; /* Rounded corners for buttons */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition for hover effects */
+  margin: 5px; /* Adds margin around buttons for spacing */
+}
+
+.button-section button:hover {
+  background-color: #388e3c; /* Darker shade on hover for visual feedback */
+  transform: scale(1.05); /* Slightly enlarge buttons on hover */
+}
+
+.query-result {
+  text-align: center;
+  margin-top: 20px; /* Adds spacing above the result section */
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Space between buttons and index display */
+  margin-bottom: 20px; /* Spacing above the media display */
+}
+
+.navigation-buttons span {
+  color: #4caf50; /* Color to match the primary scheme */
+  font-weight: bold; /* Make the current index/total bold for emphasis */
+}
+
+.media-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto; /* Centers container and adds vertical spacing */
+  border: 2px solid #4caf50; /* Adds a border to highlight the media container */
+  border-radius: 8px; /* Rounds the corners of the media container */
+  overflow: hidden; /* Ensures the content fits within the borders */
+  padding: 15px; /* Padding inside the media container for some spacing */
+}
+
+.media-container img,
+.media-container video {
+  max-width: 100%; /* Ensures media doesn't exceed the container's width */
+  height: auto; /* Maintains aspect ratio */
+  display: block; /* Fixes any alignment issues */
+  margin: 0 auto; /* Centers media within the container */
+}

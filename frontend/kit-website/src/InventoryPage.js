@@ -4,12 +4,8 @@ import axios from 'axios';
 function InventoryPage() {
   const [foodItems, setFoodItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [userRequest, setUserRequest] = useState('');
-  const [gptResponse, setGptResponse] = useState('');
   const [recipeList, setRecipeList] = useState([]);
   const [recipe, setRecipe] = useState('');
-
-
 
   useEffect(() => {
     fetchFoodItems();
@@ -65,20 +61,6 @@ function InventoryPage() {
     }
   };
 
-  const handleUserRequestChange = (event) => {
-    setUserRequest(event.target.value);
-  };
-
-  const handleSendRequest = async () => {
-    try {
-      const response = await axios.post('http://127.0.0.1:5000/api/gpt-request', { request: userRequest });
-      setGptResponse(response.data.answer);
-      setUserRequest('');
-    } catch (error) {
-      console.error('Error sending GPT request:', error);
-      // Handle error response...
-    }
-  };
 
   const handleRecipeRequest = async () => {
     try {
@@ -106,22 +88,23 @@ function InventoryPage() {
   };
   
 
-  return (
-    <div className="inventory-page">
-      <div className="scrollbar">
-        {foodItems.map((item, index) => (
-          <div key={index} className="food-item">
-            <span onClick={() => handleItemClick(item)}>
-              {item.Details.brand} - {item.Details.name}
-            </span>
+return (
+  <div className="inventory-page">
+    <div className="content">
+      {foodItems.length > 0 ? (
+        foodItems.map((item, index) => (
+          <div key={index} className="food-item" onClick={() => handleItemClick(item)}>
+            {item.Details.brand} - {item.Details.name}
             <button onClick={(e) => {
               e.stopPropagation();
               addToRecipeList(item);
             }}>+</button>
           </div>
-        ))}
-      </div>
-  
+        ))
+      ) : (
+        <p>No Items Currently In Inventory</p>
+      )}
+
       {selectedItem && (
         <div className="details-table">
           <input
@@ -246,38 +229,31 @@ function InventoryPage() {
           <button onClick={handleSaveChanges}>Save</button>
         </div>
       )}
-      <div>
-      <h4>Recipe List:</h4>
-      {recipeList.map((item, index) => (
-        <div key={index} className="food-item" style={{ justifyContent: 'space-between' }}>
-          <span>{item.Details.name}</span>
-          <button onClick={() => removeFromRecipeList(index)} style={{ marginLeft: '10px' }}>X</button>
-        </div>
-      ))}
-      <button onClick={handleRecipeRequest}>Get Recipe</button>
-      {recipe && (
-        <div className="recipe-display">
-          <h3>Recipe</h3>
-          <p>{recipe}</p>
-        </div>
-      )}
-    </div>
 
-    <div className="helper-box">
-      <textarea
-        value={userRequest}
-        onChange={handleUserRequestChange}
-        placeholder="Type your request here..."
-      ></textarea>
-      <button onClick={handleSendRequest}>Send Request</button>
-      {gptResponse && (
-        <div className="gpt-response">
-          <p>{gptResponse}</p>
-        </div>
-      )}
+      <div>
+        <h4>Recipe List:</h4>
+        {recipeList.length > 0 ? (
+          recipeList.map((item, index) => (
+            <div key={index} className="food-item" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>{item.Details.name}</span>
+              <button onClick={() => removeFromRecipeList(index)}>-</button>
+            </div>
+          ))
+        ) : (
+          <p>No items added to the recipe list.</p>
+        )}
+        <button onClick={handleRecipeRequest} className="recipe-button">Get Recipe</button>
+        {recipe && (
+          <div className="recipe-display">
+            <h3>Recipe</h3>
+            <p>{recipe}</p>
+          </div>
+        )}
+      </div>
     </div>
   </div>
 );
+
 }
 
 export default InventoryPage;
