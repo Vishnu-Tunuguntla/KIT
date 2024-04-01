@@ -1,0 +1,21 @@
+{
+    "name": "Bananas",
+    "brand": "Chiquita",
+    "category": "Fruit",
+    "nutrition_facts": {
+        "serving_size": "1 medium banana (118 grams)",
+        "calories": "105",
+        "total_fat": "0.3g",
+        "saturated_fat": "0.1g",
+        "trans_fat": "0g",
+        "cholesterol": "0mg",
+        "sodium": "1mg",
+        "total_carbohydrates": "27g",
+        "dietary_fiber": "3g",
+        "sugars": "14g",
+        "protein": "1.3g"
+    },
+    "ingredients": "Banana",
+    "expiration_date": null,
+    "quantity": null
+}

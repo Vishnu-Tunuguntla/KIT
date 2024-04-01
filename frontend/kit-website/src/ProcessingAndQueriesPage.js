@@ -29,9 +29,9 @@ function ProcessingAndQueriesPage() {
     }
   };
 
-  const handleExecute = async (endpoint) => {
+  const handleExecute = async () => {
     try {
-      await axios.post(`${backendHost}/api/${endpoint}`);
+      await axios.post('http://127.0.0.1:5000/api/execute');
       alert('Extraction and analysis executed successfully!');
     } catch (error) {
       console.error('Error executing extraction and analysis:', error);
@@ -65,7 +65,7 @@ function ProcessingAndQueriesPage() {
         <button onClick={() => handleDelete('delete-all-videos')}>Delete All Videos</button>
         <button onClick={() => handleDelete('delete-all-frames')}>Delete All Frames</button>
         <button onClick={() => handleDelete('delete-all-data')}>Delete All Data</button>
-        <button onClick={() => handleExecute('execute')}>Execute Extraction and Analysis</button>
+        <button onClick={handleExecute}>Execute Extraction and Analysis</button>
         <button onClick={handleClear}>Clear</button>
       </div>
       <div className="query-result">

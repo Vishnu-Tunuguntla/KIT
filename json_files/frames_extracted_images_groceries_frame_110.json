@@ -1,0 +1,21 @@
+{
+    "name": "Whole Grain Rolled Oats",
+    "brand": "Kirkland Signature",
+    "category": "Grains",
+    "nutrition_facts": {
+        "serving_size": "1/2 cup (40g)",
+        "calories": "150",
+        "total_fat": "2.5g",
+        "saturated_fat": "0.5g",
+        "trans_fat": "0g",
+        "cholesterol": "0mg",
+        "sodium": "0mg",
+        "total_carbohydrates": "27g",
+        "dietary_fiber": "4g",
+        "sugars": "1g",
+        "protein": "5g"
+    },
+    "ingredients": null,
+    "expiration_date": null,
+    "quantity": null
+}
