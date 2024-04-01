@@ -66,6 +66,7 @@ def delete_all_data():
 @app.route('/api/execute', methods=['POST'])
 def execute_extraction_and_analysis():
     try:
+        print("reached execute")
         process.execute_process()
         return jsonify({'message': 'Extraction and analysis executed successfully'}), 200
     except Exception as e:
