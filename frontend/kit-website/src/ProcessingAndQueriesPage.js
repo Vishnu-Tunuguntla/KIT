@@ -31,7 +31,7 @@ function ProcessingAndQueriesPage() {
 
   const handleExecute = async () => {
     try {
-      await axios.post('http://127.0.0.1:5000/api/execute');
+      await axios.post(`${backendHost}/api/execute`);
       alert('Extraction and analysis executed successfully!');
     } catch (error) {
       console.error('Error executing extraction and analysis:', error);

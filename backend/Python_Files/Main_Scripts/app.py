@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 frontend_host = os.environ.get('FRONTEND_HOST') 
-CORS(app, resources={r"/api/*": {"origins": [frontend_host, "http://localhost:5000"]}}) # Allow all origins to access the API, change to frontend_host when deploying
+CORS(app, resources={r"/api/*": {"origins": [frontend_host]}}) # Allow all origins to access the API, change to frontend_host when deploying
 
 @app.route('/api/upload', methods=['POST'])
 def upload_video():

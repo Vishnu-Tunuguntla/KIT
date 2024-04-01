@@ -236,8 +236,8 @@ def update_videos_as_processed(videos):
 # Extracts frames using a video path and accounts for duplicates using hash comparison and blur using variance of Laplacian.
 def extract_frames_from_video(video_path):
     # Load the custom YOLO model
-    model = YOLO('backend/Python_Files/Main_Scripts/best.pt')
-
+    model = YOLO('/app/backend/best.pt')
+    
     # Set the confidence threshold for object detection, higher values mean less false positives
     confidence_threshold = 0.85
 
@@ -458,28 +458,37 @@ def process_unprocessed_videos():
     """
     Processes unprocessed videos, extracts frames, and inserts them into the database.
     """
-    # Query all unprocessed videos from the database
-    unprocessed_videos = query_all_videos_og()
+    try:
+        # Query all unprocessed videos from the database
+        unprocessed_videos = query_all_videos_og()
 
-    # Update the videos as processed in the database
-    update_videos_as_processed(unprocessed_videos)
+        # Process each unprocessed video
+        for video in unprocessed_videos:
+            video_id = video[0]
+            s3_key = video[3]
 
-    # Process each unprocessed video
-    for video in unprocessed_videos:
-        video_id = video[0]
-        s3_key = video[3]
+            try:
+                # Download the video from S3
+                video_path = download_video_from_s3(s3_key)
 
-        # Download the video from S3
-        video_path = download_video_from_s3(s3_key)
+                # Extract frames from the video using the logic from frame_extract_advanced.py
+                extracted_frames = extract_frames_from_video(video_path)
 
-        # Extract frames from the video using the logic from frame_extract_advanced.py
-        extracted_frames = extract_frames_from_video(video_path)
+                # Insert the extracted frames into the database
+                insert_frames_into_database(video_id, extracted_frames)
 
-        # Insert the extracted frames into the database
-        insert_frames_into_database(video_id, extracted_frames)
+                # Upload the extracted frames to S3
+                upload_frames_to_s3(extracted_frames)
 
-        # Upload the extracted frames to S3
-        upload_frames_to_s3(extracted_frames)
+            except Exception as e:
+                print(f"Error occurred while processing video {video_id}: {e}")
+        
+        # Update the videos as processed in the database
+        update_videos_as_processed(unprocessed_videos)
+
+    except Exception as e:
+        print(f"Error occurred in process_unprocessed_videos: {e}")
+        
 
 def process_unprocessed_frames():
     # Query all unprocessed frames from the database
