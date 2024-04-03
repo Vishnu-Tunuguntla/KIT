@@ -235,8 +235,12 @@ def update_videos_as_processed(videos):
 
 # Extracts frames using a video path and accounts for duplicates using hash comparison and blur using variance of Laplacian.
 def extract_frames_from_video(video_path):
-    # Load the custom YOLO model
-    model = YOLO('/app/backend/best.pt')
+    # Load the custom YOLO model, depends on the environment (docker vs local)
+    if os.path.exists('/app/backend/best.pt'):
+        model = YOLO('/app/backend/best.pt')
+    else:
+        #local file path for the model
+        model = YOLO('KIT/backend/Python_Files/Main_Scripts/best.pt')
     
     # Set the confidence threshold for object detection, higher values mean less false positives
     confidence_threshold = 0.85
