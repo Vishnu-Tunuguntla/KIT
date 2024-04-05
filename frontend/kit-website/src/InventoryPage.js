@@ -128,9 +128,8 @@ const addToRecipeList = (item) => {
 
   if (containsAllergen) {
     alert('Warning: May contain allergen!');
-  } else {
-    setRecipeList(currentList => [...currentList, item]);
-  }
+  } 
+  setRecipeList(currentList => [...currentList, item]); 
 };
 
   return (
