@@ -4,7 +4,7 @@ import axios from 'axios';
 function UploadVideoPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
-  const backendHost = process.env.REACT_APP_BACKEND_HOST || "http://3.85.159.99:5000";
+  const backendHost = "http://34.233.181.229:5000";
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);

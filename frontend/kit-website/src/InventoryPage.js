@@ -8,7 +8,7 @@ function InventoryPage() {
   const [gptResponse, setGptResponse] = useState('');
   const [recipeList, setRecipeList] = useState([]);
   const [recipe, setRecipe] = useState('');
-  const backendHost = process.env.REACT_APP_BACKEND_HOST || "http://3.85.159.99:5000";
+  const backendHost = "http://34.233.181.229:5000";
 
 
 

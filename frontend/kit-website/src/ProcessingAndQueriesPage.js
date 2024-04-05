@@ -5,7 +5,7 @@ import './ProcessingAndQueriesPage.css';
 function ProcessingAndQueriesPage() {
   const [queryResult, setQueryResult] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const backendHost = process.env.REACT_APP_BACKEND_HOST || "http://3.85.159.99:5000";
+  const backendHost = "http://34.233.181.229:5000";
 
   const handleQuery = async (endpoint) => {
     try {
