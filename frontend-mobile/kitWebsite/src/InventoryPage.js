@@ -14,7 +14,7 @@ function InventoryPage() {
 
   const fetchFoodItems = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/api/food-items');
+      const response = await axios.get('http://34.233.181.229:5000/api/food-items');
       setFoodItems(response.data);
     } catch (error) {
       console.error('Error fetching food items:', error);
@@ -43,7 +43,7 @@ function InventoryPage() {
       return;
     }
     try {
-      await axios.put(`http://127.0.0.1:5000/api/food-items/${selectedItem.ItemID}`, selectedItem);
+      await axios.put(`http://34.233.181.229:5000/api/food-items/${selectedItem.ItemID}`, selectedItem);
       Alert.alert("Success", "Changes saved successfully");
       fetchFoodItems(); // Refetch the food items after saving changes
     } catch (error) {
@@ -58,7 +58,7 @@ function InventoryPage() {
       return;
     }
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/gpt-request', { request: userRequest });
+      const response = await axios.post('http://34.233.181.229:5000/api/gpt-request', { request: userRequest });
       setGptResponse(response.data.answer);
       setUserRequest(''); // Clear the request input field after sending
       Alert.alert("Success", "Request sent successfully");

@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
 import InventoryPage from "./InventoryPage"
 import ProcessingAndQueriesPage from "./ProcessingAndQueriesPage";
 import UploadVideoPage from "./UploadVideo"
+import GroceryListPage from "./GroceryListPage";
 
 
 
@@ -12,8 +13,9 @@ const Tab = createBottomTabNavigator();
 const Tabs = () => {
     return(
         <Tab.Navigator>
-            <Tab.Screen name = "UploadVideo" component = {UploadVideoPage}/>
-            <Tab.Screen name = "ProcessingAndQueries" component = {ProcessingAndQueriesPage}/>
+            <Tab.Screen name = "Grocery List" component={GroceryListPage}/>
+            <Tab.Screen name = "Upload" component = {UploadVideoPage}/>
+            <Tab.Screen name = "Query" component = {ProcessingAndQueriesPage}/>
             <Tab.Screen name = "Inventory" component = {InventoryPage}/>
         </Tab.Navigator>
     )

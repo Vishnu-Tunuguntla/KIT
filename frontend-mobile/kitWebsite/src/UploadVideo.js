@@ -1,47 +1,60 @@
 import React, { useState } from 'react';
-import { View, Alert, Platform, PermissionsAndroid, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
+import { Linking, View, Alert, TouchableOpacity, Text, StyleSheet, Platform } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 
 const UploadVideoPage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [fileName, setFileName] = useState(''); // New state for file name
 
-  const handleFileChange = async () => {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        {
-          title: "Permission to access storage",
-          message: "App needs access to your storage to upload video",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK"
+  const getPermissionAsync = async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.getMediaLibraryPermissionsAsync(false);
+      if (status !== 'granted') {
+        const { status: newStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (newStatus !== 'granted') {
+          Alert.alert(
+            'Camera Roll Permission Required',
+            'Please go to your settings and grant permission for camera roll access.',
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Settings', onPress: () => Linking.openSettings() },
+            ],
+            { cancelable: false },
+          );
+          return false;
         }
-      );
-      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-        Alert.alert("Storage Permission Denied");
-        return;
       }
     }
+    return true;
+  };
   
+
+  const handleFileChange = async () => {
+    const hasPermission = await getPermissionAsync();
+    if (!hasPermission) return;
+
     try {
-      const result = await launchImageLibrary({ mediaType: 'video' });
-      if (result.didCancel) {
-        console.log('User cancelled video picker');
-      } else if (result.errorCode) {
-        console.log('ImagePicker Error: ', result.errorMessage);
-      } else if (result.assets && result.assets.length > 0) {
-        const source = { uri: result.assets[0].uri };
-        console.log(source);
-        setSelectedFile(source);
-      }
-    } catch (error) {
-      console.error('Error selecting the video:', error);
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.cancelled && result.assets && result.assets.length > 0) {
+  const video = result.assets[0]; // Get the first video from the assets array
+  console.log(video);
+  setSelectedFile({ uri: video.uri });
+  setFileName(video.fileName); // Set the file name from the fileName property
+} else {
+  console.error('No video available', result);
+}
+
+    } catch (E) {
+      console.error('Error selecting the video:', E);
       Alert.alert('Error', 'Could not select the video. Please try again.');
     }
   };
-
-  
 
   const handleUpload = async () => {
     if (!selectedFile) return;
@@ -49,12 +62,12 @@ const UploadVideoPage = () => {
     const formData = new FormData();
     formData.append('video', {
       uri: selectedFile.uri,
-      type: 'video/mp4', // or the correct type based on the file
-      name: 'upload.mp4',
+      type: 'video/mp4',
+      name: fileName, // Use the state for file name
     });
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/upload', formData, {
+      const response = await axios.post('http://34.233.181.229:5000/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -62,6 +75,7 @@ const UploadVideoPage = () => {
       console.log(response.data.message);
       Alert.alert('Video uploaded successfully!');
       setSelectedFile(null);
+      setFileName(''); // Reset file name
     } catch (error) {
       console.error('Error uploading video:', error);
       Alert.alert('Error', 'Could not upload the video. Please try again.');
@@ -70,6 +84,10 @@ const UploadVideoPage = () => {
 
   return (
     <View style={styles.container}>
+      {/* Display the file name here */}
+      {fileName ? (
+        <Text style={styles.fileNameText}>{fileName}</Text>
+      ) : null}
       <TouchableOpacity style={styles.buttonStyle} onPress={handleFileChange}>
         <Text style={styles.buttonText}>Select Video</Text>
       </TouchableOpacity>
@@ -89,23 +107,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonStyle: {
-    backgroundColor: '#0066cc', // Blue background for buttons
+    backgroundColor: '#0066cc',
     paddingVertical: 10,
     paddingHorizontal: 20,
     margin: 5,
-    borderRadius: 20, // Rounded corners
+    borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3, // Shadow for Android
+    elevation: 3,
   },
   buttonText: {
-    color: '#fff', // White text color
+    color: '#fff',
     fontSize: 16,
     textAlign: 'center',
   },
+  fileNameText: { // New style for file name text
+    color: '#000', // Black text color
+    fontSize: 14,
+    margin: 5,
+    textAlign: 'center',
+  },
 });
-
 
 export default UploadVideoPage;

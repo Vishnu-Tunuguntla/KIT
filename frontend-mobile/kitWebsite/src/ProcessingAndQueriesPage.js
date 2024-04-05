@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, Image, Alert, ScrollView } from 'react-native';
 import axios from 'axios';
-import Video from 'react-native-video';
+import { Video } from 'expo-av';
 import { TouchableOpacity } from 'react-native';
 
 function ProcessingAndQueriesPage() {
@@ -14,7 +14,7 @@ function ProcessingAndQueriesPage() {
 
   const handleQuery = async (endpoint) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/api/${endpoint}`);
+      const response = await axios.get(`http://34.233.181.229:5000/api/${endpoint}`);
       setQueryResult(response.data);
       setCurrentIndex(0);
     } catch (error) {
@@ -24,7 +24,7 @@ function ProcessingAndQueriesPage() {
   };
   const handleDelete = async (endpoint) => {
     try {
-      const response = await axios.delete(`http://127.0.0.1:5000/api/${endpoint}`);
+      const response = await axios.delete(`http://34.233.181.229:5000/api/${endpoint}`);
       setQueryResult(response.data);
       setCurrentIndex(0);
     } catch (error) {
@@ -34,7 +34,7 @@ function ProcessingAndQueriesPage() {
   };
   const handleExecute = async (endpoint) => {
     try {
-      const response = await axios.post(`http://127.0.0.1:5000/api/${endpoint}`);
+      const response = await axios.post(`http://34.233.181.229:5000/api/${endpoint}`);
       setQueryResult(response.data);
       setCurrentIndex(0);
     } catch (error) {
@@ -89,21 +89,28 @@ function ProcessingAndQueriesPage() {
       </View>
 
       <View style={styles.resultContainer}>
-        {queryResult.length === 0 ? (
-          <Text>No data available.</Text>
-        ) : isImage(queryResult[currentIndex]) ? (
-          <Image source={{ uri: queryResult[currentIndex] }} style={styles.image} />
-        ) : (
-          <Video
-            source={{ uri: queryResult[currentIndex] }}
-            style={styles.video}
-            controls={true}
-            onError={(e) => {
-              console.error('Failed to load video:', e);
-              Alert.alert('Error', 'Failed to load video');
-            }}
-          />
-        )}
+      {queryResult.length === 0 ? (
+  <Text>No data available.</Text>
+) : isImage(queryResult[currentIndex]) ? (
+  <Image source={{ uri: queryResult[currentIndex] }} style={styles.image} />
+) : (
+  <Video
+    source={{ uri: queryResult[currentIndex] }} // The URI of the video to play
+    rate={1.0}
+    volume={1.0}
+    isMuted={false}
+    resizeMode="cover"
+    shouldPlay
+    isLooping
+    style={styles.video}
+    useNativeControls // Use native controls
+    onError={(e) => { // Handle error here
+      console.error('Failed to load video:', e);
+      Alert.alert('Error', 'Failed to load video');
+    }}
+  />
+)}
+
       </View>
       {queryResult.length > 1 && (
         <View style={styles.navigationButtons}>
