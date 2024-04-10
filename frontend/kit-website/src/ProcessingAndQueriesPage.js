@@ -5,7 +5,7 @@ import './ProcessingAndQueriesPage.css';
 function ProcessingAndQueriesPage() {
   const [queryResult, setQueryResult] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const backendHost = "http://34.233.181.229:5000";
+  const backendHost = "http://localhost:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
 
   const handleQuery = async (endpoint) => {
     try {
@@ -57,17 +57,29 @@ function ProcessingAndQueriesPage() {
       <div className="page-header">
         <h2>Processing and Queries</h2>
       </div>
-      <div className="query-buttons">
+
+      {/* Query Buttons */}
+      <div className="button-section">
         <button onClick={() => handleQuery('query-all-videos')}>Query All Videos</button>
         <button onClick={() => handleQuery('query-unprocessed-videos')}>Query Unprocessed Videos</button>
         <button onClick={() => handleQuery('query-processed-videos')}>Query Processed Videos</button>
         <button onClick={() => handleQuery('query-frames')}>Query Frames</button>
+      </div>
+
+      {/* Delete Buttons */}
+      <div className="button-section">
         <button onClick={() => handleDelete('delete-all-videos')}>Delete All Videos</button>
         <button onClick={() => handleDelete('delete-all-frames')}>Delete All Frames</button>
         <button onClick={() => handleDelete('delete-all-data')}>Delete All Data</button>
+      </div>
+
+      {/* Execute and Clear Buttons */}
+      <div className="button-section">
         <button onClick={handleExecute}>Execute Extraction and Analysis</button>
         <button onClick={handleClear}>Clear</button>
       </div>
+
+      {/* Query Result Display */}
       <div className="query-result">
         {queryResult === null ? (
           <p>Click a query button to view data.</p>
@@ -75,21 +87,17 @@ function ProcessingAndQueriesPage() {
           <p>No data available.</p>
         ) : (
           <div>
-            <button onClick={handlePrevious}>Previous</button>
-            <button onClick={handleNext}>Next</button>
+            <div className="navigation-buttons">
+              <button onClick={handlePrevious} className="navigation-buttons button">Previous</button>
+              {/* Displaying the current index and total */}
+              <span>{currentIndex + 1} of {queryResult.length}</span>
+              <button onClick={handleNext} className="navigation-buttons button">Next</button>
+            </div>
             <div className="media-container">
               {queryResult[currentIndex].startsWith('data:image/') ? (
-                <img
-                  src={queryResult[currentIndex]}
-                  alt="Query Result"
-                  onError={(e) => {
-                    console.error('Failed to load image:', queryResult[currentIndex]);
-                    e.target.onerror = null; // prevents looping
-                    e.target.src = 'path/to/default/image.jpg';
-                  }}
-                />
+                <img src={queryResult[currentIndex]} alt="Query Result" />
               ) : (
-                <video key={queryResult[currentIndex]} controls width="100%">
+                <video key={queryResult[currentIndex]} controls>
                   <source src={queryResult[currentIndex]} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
@@ -103,3 +111,4 @@ function ProcessingAndQueriesPage() {
 }
 
 export default ProcessingAndQueriesPage;
+

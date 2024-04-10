@@ -1,13 +1,28 @@
+/* Include Roboto or your chosen font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Apply the font to the body or specific elements to ensure it's used throughout the dropdown */
+body, .dropdown-bar, .dropdown-toggle, .dropdown-menu button, .toggle-button {
+  font-family: 'Roboto', sans-serif;
+}
+
 .toggle-button {
   position: fixed;
   left: 10px;
   top: 10px;
   padding: 10px;
-  background-color: #4caf50;
+  background-color: #4caf50; /* Consider a more vibrant shade if desired */
   color: white;
   border: none;
   cursor: pointer;
   z-index: 1000;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+}
+
+/* Improved visibility and interaction */
+.toggle-button:hover {
+  background-color: #43a047; /* A slightly darker shade for hover */
+  transform: scale(1.05); /* A subtle growth effect */
 }
 
 .dropdown-bar {
@@ -16,7 +31,7 @@
   top: 0;
   bottom: 0;
   width: 200px;
-  background-color: #252424;
+  background-color: #252424; /* Consider a slightly lighter shade for less contrast */
   padding: 20px;
   transition: transform 0.3s ease-in-out;
   transform: translateX(-100%);
@@ -34,7 +49,9 @@
   border: none;
   cursor: pointer;
   width: 100%;
+  margin-bottom: 20px; /* Adds space below the Close Menu button */
 }
+
 
 .dropdown-menu {
   list-style-type: none;
@@ -43,7 +60,7 @@
 }
 
 .dropdown-menu li {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .dropdown-menu button {
@@ -55,8 +72,11 @@
   padding: 5px;
   width: 100%;
   text-align: left;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .dropdown-menu button:hover {
   background-color: #4caf50;
+  /* Adding a slight shadow for depth on hover */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

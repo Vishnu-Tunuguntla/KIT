@@ -36,6 +36,91 @@ bucket_name = 'kitbucketaws'
 api_key = os.getenv("GPT_API_KEY")
 client = OpenAI(api_key=api_key)
 
+def load_model():
+    if os.path.exists('/app/backend/barcode.pt'):
+        model = YOLO('/app/backend/barcode.pt')
+    else:
+        # Local file path for the model
+        model = YOLO('KIT/backend/Python_Files/Main_Scripts/barcode.pt')
+    return model
+
+def detect_objects_in_image(image_path, model, confidence_threshold=0.75, output_folder="extracted_barcode_frames"):
+    # Initialize a list to store the detected objects
+    detected_objects = []
+
+    # Create the output folder if it doesn't exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Read the image
+    image = cv2.imread(image_path)
+
+    # Check if the image was successfully opened
+    if image is None:
+        print(f'Failed to load image {image_path}')
+        return detected_objects
+
+    # Run object detection on the image
+    results = model(image)
+
+    # Check if there are any detected objects
+    if len(results) > 0:
+        # Iterate through the detected objects
+        for result in results:
+            # Get the bounding box coordinates
+            x1, y1, x2, y2 = result.boxes.xyxy[0].tolist()
+
+            # Get the class label and confidence score
+            class_label = result.boxes.cls[0].item()
+            confidence_score = result.boxes.conf[0].item()
+
+            # Check if the object is classified as "barcode" and has a confidence score above the threshold
+            if class_label == 0 and confidence_score >= confidence_threshold:
+                # Crop the barcode from the image
+                barcode_image = image[int(y1):int(y2), int(x1):int(x2)]
+
+                # Generate the file path for the cropped barcode image
+                barcode_image_path = os.path.join(output_folder, f'extracted_barcode_{os.path.basename(image_path)}')
+
+                # Save the cropped barcode image
+                cv2.imwrite(barcode_image_path, barcode_image)
+
+                # Add the bounding box and confidence score to the detected objects list
+                detected_objects.append({
+                    'class_label': class_label,
+                    'confidence_score': confidence_score,
+                    'bbox': [x1, y1, x2, y2],
+                    'extracted_path': barcode_image_path
+                })
+
+    return detected_objects
+
+def detect_barcode_in_image(image_path, item_id):
+    # Load YOLO model
+    model = load_model()
+
+    # Detect objects in the image
+    detections = detect_objects_in_image(image_path, model)
+
+    # Upload the barcode image to S3 and insert into the database
+    for detection in detections:
+        extracted_path = detection['extracted_path']
+        s3_key = f"barcodes/{os.path.basename(extracted_path)}"
+        s3.upload_file(extracted_path, bucket_name, s3_key)
+        
+        insert_barcode_image(item_id, s3_key)
+
+def insert_barcode_image(item_id, s3_key):
+    # SQL to insert barcode image
+    insert_query = """
+    INSERT INTO BarcodeImages (ItemID, Path)
+    VALUES (%s, %s)
+    """
+
+    with psycopg2.connect(**db_conn_params) as conn:
+        with conn.cursor() as cur:
+            cur.execute(insert_query, (item_id, s3_key))
+
 # Function to retrieve all food item names and brands from the database
 def get_food_item_names_and_brands():
     try:
@@ -273,7 +358,7 @@ def extract_frames_from_video(video_path):
     # Open the video file
     cap = cv2.VideoCapture(video_path)
 
-    # Get the video frame rate and total number of frames
+    # Get the video frame rate and total Fmber of frames
     fps = cap.get(cv2.CAP_PROP_FPS)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
@@ -628,6 +713,8 @@ def delete_all_frames():
 def delete_all_data():
     conn = psycopg2.connect(**db_conn_params)
     cur = conn.cursor()
+    cur.execute("DELETE FROM NutritionalFacts")
+    cur.execute("DELETE FROM BarcodeImages")
     cur.execute("DELETE FROM FoodItem")
     cur.execute("DELETE FROM Frames")
     cur.execute("DELETE FROM Videos")

@@ -2,10 +2,31 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import process
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 frontend_host = os.environ.get('FRONTEND_HOST', "*") 
 CORS(app, resources={r"/api/*": {"origins": [frontend_host]}}) # Allow all origins to access the API, change to frontend_host when deploying
+
+@app.route('/api/add-barcode', methods=['POST'])
+def add_barcode():
+    try:
+        image_file = request.files['image']
+        item_id = request.form['itemId']
+        
+        # Save the uploaded image temporarily
+        image_path = 'temp_barcode_image.jpg'
+        image_file.save(image_path)
+        
+        # Call the detect_barcode_in_image function from process.py
+        process.detect_barcode_in_image(image_path, item_id)
+        
+        # Remove the temporary image file
+        os.remove(image_path)
+        
+        return jsonify({'message': 'Barcode added successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/upload', methods=['POST'])
 def upload_video():
@@ -115,5 +136,5 @@ def handle_recipe_request():
         print(f"Error in handle_recipe_request: {e}")
         return jsonify({'error': str(e)}), 500
 
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
