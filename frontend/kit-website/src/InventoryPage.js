@@ -6,7 +6,7 @@ function InventoryPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [recipeList, setRecipeList] = useState([]);
   const [recipe, setRecipe] = useState('');
-  const backendHost = "http://localhost:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
+  const backendHost = "http://34.233.181.229:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
 
   useEffect(() => {
     fetchFoodItems();
