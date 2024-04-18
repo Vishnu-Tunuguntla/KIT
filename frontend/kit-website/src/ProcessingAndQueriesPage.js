@@ -5,7 +5,7 @@ import './ProcessingAndQueriesPage.css';
 function ProcessingAndQueriesPage() {
   const [queryResult, setQueryResult] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const backendHost = "http://34.233.181.229:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
+  const backendHost = "http://localhost:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
 
   const handleQuery = async (endpoint) => {
     try {

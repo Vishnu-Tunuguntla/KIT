@@ -6,7 +6,7 @@ function InventoryPage() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [recipeList, setRecipeList] = useState([]);
   const [recipe, setRecipe] = useState('');
-  const backendHost = "http://34.233.181.229:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
+  const backendHost = "http://localhost:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
 
   useEffect(() => {
     fetchFoodItems();
@@ -16,6 +16,8 @@ function InventoryPage() {
     try {
       const response = await axios.get(`${backendHost}/api/food-items`);
       setFoodItems(response.data);
+      console.log(response.data)
+      console.log(foodItems)
     } catch (error) {
       console.error('Error fetching food items:', error);
     }
@@ -113,7 +115,7 @@ function InventoryPage() {
         {foodItems.length > 0 ? (
           foodItems.map((item, index) => (
             <div key={index} className="food-item" onClick={() => handleItemClick(item)}>
-              {item.Details.brand} - {item.Details.name}
+              {item.Details.product_name} - {item.Details.product_name}
               <button onClick={(e) => {
                 e.stopPropagation();
                 addToRecipeList(item);

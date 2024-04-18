@@ -6,7 +6,7 @@ function UploadVideoPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState('');
   const fileInputRef = useRef(null);
-  const backendHost = "http://34.233.181.229:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
+  const backendHost = "http://localhost:5000"; //"http://34.233.181.229:5000"; // "http://localhost:5000";
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];

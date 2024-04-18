@@ -8,7 +8,7 @@ from langchain_community.document_transformers import BeautifulSoupTransformer
 
 # Set the Brave Search API key and initialize the ChatOpenAI language model
 api_key = "BSAx-Fuzc3WKsXGCTwflO4SkRbf6AwU"
-llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
+llm = ChatOpenAI(temperature=0, model="gpt-4")
 
 #Set OPEN_AI_API_KEY environment variable for langchain to use OpenAI API
 
@@ -51,7 +51,7 @@ def scrape_with_playwright(url, schema):
     extracted_content = extract(schema=schema, content=splits[0].page_content)
     
     # Print the extracted content
-    pprint.pprint(extracted_content)
+    #pprint.pprint(extracted_content)
     
     return extracted_content
 
@@ -76,10 +76,15 @@ def search_and_scrape(query, schema, num_results=3):
         extracted_content = scrape_with_playwright(url, schema)
         extracted_contents.append(extracted_content)
     
-    return extracted_contents
+    # Find the largest content based on the length of the extracted content
+    largest_content = max(extracted_contents, key=lambda x: len(str(x)))
+    return largest_content
+    
+    #return extracted_contents
 
 # Set the search query
-query = "Trader Joe's Strawberry Flakes Nutrition Information"
+query = "Barebells Salty Peanut Protein Bar Nutrition Information"
 
 # Perform the search and scrape the top search results
 extracted_contents = search_and_scrape(query, schema)
+pprint.pprint(extracted_contents)
