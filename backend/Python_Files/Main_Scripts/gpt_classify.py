@@ -43,7 +43,7 @@ def llm_classify(image_path):
                 "content": [
                     {
                         "type": "text",
-                        "text": "Identify the grocery item in the image. Provide the name, brand, category, nutrition facts (serving size, calories, total fat, saturated fat, trans fat, cholesterol, sodium, total carbohydrates, dietary fiber, sugars, protein), ingredients, expiration date, and quantity if available. Respond as a valid JSON object with null for missing information. Ensure that all values are properly quoted and the JSON syntax is correct. Do not include any additional prose or explanations."
+                        "text": "Examine the image to determine if it features a grocery item. Output should be in JSON format. If the item is not a grocery item, the JSON should state: {\"food_type\": \"not a grocery item\"}. If the item is a produce, the JSON should include: {\"food_type\": \"produce\", \"name\": \"<item name>\", \"nutrition_info\": {<nutrition details>}, \"approximate_expiration_time\": \"<approximated expiration time after purchase>\"}. If the item is packaged, the JSON should include: {\"food_type\": \"packaged\", \"product_name\": \"<extracted text>\", \"details\": {<extracted product details>}}."
                     },
                     {
                         "type": "image_url",
@@ -89,5 +89,5 @@ def llm_classify(image_path):
         print(f"Response text: {response_text}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-print(api_key)
+llm_classify("AppleImage.jpeg")
 
