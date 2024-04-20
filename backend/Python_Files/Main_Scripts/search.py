@@ -1,3 +1,4 @@
+import json
 import pprint
 from langchain_community.document_loaders import BraveSearchLoader
 from langchain_openai import ChatOpenAI
@@ -61,9 +62,6 @@ def scrape_with_beautifulsoup(url, schema, max_lines=10):
         print(f"Extracted content has too many lines for {url}")
         return None
 
-    # Print the extracted content
-    #pprint.pprint(extracted_content)
-
     # Remove the "input" field from the extracted content
     nutrition_info = extracted_content.get("text", [])
     if nutrition_info:
@@ -72,7 +70,7 @@ def scrape_with_beautifulsoup(url, schema, max_lines=10):
         return None
 
 # Function to perform a search using Brave Search and scrape the top search results
-def search_and_scrape(query, schema, num_results=4):
+def search_and_scrape(query, schema, num_results=3):
     # Load search results using BraveSearchLoader
     loader = BraveSearchLoader(
         query=query,
@@ -109,9 +107,32 @@ def search_and_scrape(query, schema, num_results=4):
 
     return largest_content
 
+# Function to create a JSON file with the extracted content
+def create_json_file(extracted_content, output_file):
+    # Create a dictionary with the schema properties
+    json_data = {
+        "product_name": extracted_content.get("product_name", ""),
+        "serving_size": extracted_content.get("serving_size", ""),
+        "calories": extracted_content.get("calories", 0),
+        "total_fat": extracted_content.get("total_fat", {"amount": 0, "unit": ""}),
+        "protein": extracted_content.get("protein", {"amount": 0, "unit": ""}),
+        "carbohydrates": extracted_content.get("carbohydrates", {"amount": 0, "unit": ""}),
+    }
+
+    # Write the JSON data to a file
+    with open(output_file, "w") as file:
+        json.dump(json_data, file, indent=4)
+
+    print(f"JSON file '{output_file}' created successfully.")
+
 # Set the search query
-query = "Nutrition Information for Girlscout Samoa Cookies"
+query = "Nutrition Information for Trader Joes Strawberry Flakes Cereal"
 
 # Perform the search and scrape the top search results
 extracted_contents = search_and_scrape(query, schema)
-pprint.pprint(extracted_contents)
+
+# Create a JSON file with the extracted content
+if extracted_contents:
+    create_json_file(extracted_contents, "nutrition_info.json")
+else:
+    print("No content extracted to create the JSON file.")
