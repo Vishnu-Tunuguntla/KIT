@@ -36,7 +36,7 @@ def llm_classify(image_path):
     }
 
     payload = {
-        "model": "gpt-4-vision-preview",
+        "model": "gpt-4-turbo",
         "messages": [
             {
                 "role": "user",

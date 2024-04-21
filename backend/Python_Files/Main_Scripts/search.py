@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 # Set the Brave Search API key and initialize the ChatOpenAI language model
 api_key = "BSAx-Fuzc3WKsXGCTwflO4SkRbf6AwU"
-llm = ChatOpenAI(temperature=0, model="gpt-4")
+llm = ChatOpenAI(temperature=0, model="gpt-4-turbo")
 
 # Set OPENAI_API_KEY environment variable for langchain to use OpenAI API
 
@@ -70,9 +70,19 @@ def scrape_with_beautifulsoup(url, schema, max_lines=10):
         return nutrition_info[0]
     else:
         return None
+    
+# Function to calculate the relevance score of the json content based on the schema   
+def calculate_relevance_score(content, schema):
+    score = 0
+    for field in schema["properties"]:
+        if field in content:
+            value = str(content[field]).strip()
+            if value and value.lower() not in ["none", "none none", "null", "", "Not Specified"]:
+                score += 1
+    return score
 
 # Function to perform a search using Brave Search and scrape the top search results
-def search_and_scrape(query, schema, num_results=8):
+def search_and_scrape(query, schema, num_results=10):
     # Load search results using BraveSearchLoader
     loader = BraveSearchLoader(
         query=query,
@@ -87,7 +97,7 @@ def search_and_scrape(query, schema, num_results=8):
 
     count = 0
 
-    excluded_sources = ["none"]
+    excluded_sources = ["amazon"]
 
     # Iterate over each search result
     for result in search_results:
@@ -125,10 +135,20 @@ def search_and_scrape(query, schema, num_results=8):
         print("No content extracted from the search results.")
         return None
 
-    # Find the largest content based on the length of the extracted content
-    largest_content = max(extracted_contents, key=lambda x: len(str(x)))
+    relevance_scores = []
 
-    return largest_content
+    # Iterate over each extracted content
+    for content in extracted_contents:
+        relevance_score = calculate_relevance_score(content, schema)
+        relevance_scores.append(relevance_score)
+
+    # Find the index of the content with the highest relevance score
+    best_index = relevance_scores.index(max(relevance_scores))
+
+    # Select the best content based on the highest relevance score
+    best_content = extracted_contents[best_index]
+
+    return best_content
 
 # Function to create a JSON file with the extracted content
 def create_json_file(product_name, extracted_content, output_file):

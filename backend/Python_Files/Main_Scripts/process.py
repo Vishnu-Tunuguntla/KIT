@@ -160,7 +160,7 @@ def answer_request(food_items, request):
                     "content": f"Food items: {food_item_names_and_brands_str}\nRequest: {request}"
                 }
             ],
-            model="gpt-4",
+            model="gpt-4-turbo",
         )
 
         answer = response.choices[0].message.content.strip()
@@ -188,7 +188,7 @@ def get_recipe_from_ingredients(ingredients):
                     "content": prompt
                 }
             ],
-            model="gpt-4",
+            model="gpt-4-turbo",
         )
 
         # Extract and return the response from GPT
