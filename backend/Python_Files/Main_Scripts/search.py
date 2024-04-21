@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 api_key = "BSAx-Fuzc3WKsXGCTwflO4SkRbf6AwU"
 llm = ChatOpenAI(temperature=0, model="gpt-4")
 
-# Set OPEN_AI_API_KEY environment variable for langchain to use OpenAI API
+# Set OPENAI_API_KEY environment variable for langchain to use OpenAI API
 
 # Define the schema for the nutrition information extraction
 schema = {
@@ -22,6 +22,8 @@ schema = {
         "total_fat": {"type": "object", "properties": {"amount": {"type": "number"}, "unit": {"type": "string"}}},
         "protein": {"type": "object", "properties": {"amount": {"type": "number"}, "unit": {"type": "string"}}},
         "carbohydrates": {"type": "object", "properties": {"amount": {"type": "number"}, "unit": {"type": "string"}}},
+        "sugar": {"type": "object", "properties": {"amount": {"type": "number"}, "unit": {"type": "string"}}},
+        "sodium": {"type": "object", "properties": {"amount": {"type": "number"}, "unit": {"type": "string"}}},
     },
     "required": ["product_name", "serving_size", "calories"],
 }
@@ -70,32 +72,53 @@ def scrape_with_beautifulsoup(url, schema, max_lines=10):
         return None
 
 # Function to perform a search using Brave Search and scrape the top search results
-def search_and_scrape(query, schema, num_results=3):
+def search_and_scrape(query, schema, num_results=8):
     # Load search results using BraveSearchLoader
     loader = BraveSearchLoader(
         query=query,
         api_key=api_key,
         search_kwargs={
             "count": num_results,
-            "sources": "-amazon.com",
-            "safesearch": "moderate",
         }
     )
     search_results = loader.load()
 
     extracted_contents = []
 
+    count = 0
+
+    excluded_sources = ["none"]
+
     # Iterate over each search result
     for result in search_results:
+        illegal_source = False
         # Extract the URL from the search result metadata
         url = result.metadata["link"]
 
+        # Check if the URL contains any excluded sources
+        for source in excluded_sources:
+            if source in url:
+                print(f"Excluding {source} from search results.")
+                illegal_source = True
+                break
+        if illegal_source:
+            continue
+
         # Scrape the webpage and extract content using scrape_with_beautifulsoup function
-        extracted_content = scrape_with_beautifulsoup(url, schema)
+        try:
+            extracted_content = scrape_with_beautifulsoup(url, schema)
+        except Exception as e:
+            print(f"An error occurred while scraping {url}: {e}")
+            extracted_content = None
 
         # Check if extracted_content is not None before appending
         if extracted_content is not None:
             extracted_contents.append(extracted_content)
+        if count >= 3:
+            if extracted_contents:
+                break
+
+        count+=1
 
     # Check if extracted_contents is empty
     if not extracted_contents:
@@ -108,31 +131,38 @@ def search_and_scrape(query, schema, num_results=3):
     return largest_content
 
 # Function to create a JSON file with the extracted content
-def create_json_file(extracted_content, output_file):
+def create_json_file(product_name, extracted_content, output_file):
     # Create a dictionary with the schema properties
     json_data = {
-        "product_name": extracted_content.get("product_name", ""),
+        "product_name": product_name,
         "serving_size": extracted_content.get("serving_size", ""),
         "calories": extracted_content.get("calories", 0),
-        "total_fat": extracted_content.get("total_fat", {"amount": 0, "unit": ""}),
-        "protein": extracted_content.get("protein", {"amount": 0, "unit": ""}),
-        "carbohydrates": extracted_content.get("carbohydrates", {"amount": 0, "unit": ""}),
+        "total_fat": f'{extracted_content.get("total_fat", {"amount": 0}).get("amount", 0)} {extracted_content.get("total_fat", {"unit": ""}).get("unit", "")}',
+        "protein": f'{extracted_content.get("protein", {"amount": 0}).get("amount", 0)} {extracted_content.get("protein", {"unit": ""}).get("unit", "")}',
+        "carbohydrates": f'{extracted_content.get("carbohydrates", {"amount": 0}).get("amount", 0)} {extracted_content.get("carbohydrates", {"unit": ""}).get("unit", "")}',
+        "sugar": f'{extracted_content.get("sugar", {"amount": 0}).get("amount", 0)} {extracted_content.get("sugar", {"unit": ""}).get("unit", "")}',
+        "sodium": f'{extracted_content.get("sodium", {"amount": 0}).get("amount", 0)} {extracted_content.get("sodium", {"unit": ""}).get("unit", "")}'
     }
+    return json_data
 
-    # Write the JSON data to a file
-    with open(output_file, "w") as file:
-        json.dump(json_data, file, indent=4)
+def execute_search(brand_and_food_item):
+    query = brand_and_food_item + " nutrition information"
+    # Perform the search and scrape the top search results
+    try:
+        extracted_contents = search_and_scrape(query, schema)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        extracted_contents = None
 
-    print(f"JSON file '{output_file}' created successfully.")
+    # Create a JSON file with the extracted content
+    if extracted_contents:
+        json_data = create_json_file(brand_and_food_item, extracted_contents, "nutrition_info.json")
+        return json_data
+    else:
+        print("No content extracted to create the JSON file.")
+        return None
 
 # Set the search query
-query = "Nutrition Information for Trader Joes Strawberry Flakes Cereal"
+# item = "Betty Crocker Original Bisquick Pancake & Baking Mix"
 
-# Perform the search and scrape the top search results
-extracted_contents = search_and_scrape(query, schema)
-
-# Create a JSON file with the extracted content
-if extracted_contents:
-    create_json_file(extracted_contents, "nutrition_info.json")
-else:
-    print("No content extracted to create the JSON file.")
+# print(execute_search(item))

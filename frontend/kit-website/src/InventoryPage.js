@@ -115,7 +115,7 @@ function InventoryPage() {
         {foodItems.length > 0 ? (
           foodItems.map((item, index) => (
             <div key={index} className="food-item" onClick={() => handleItemClick(item)}>
-              {item.Details.product_name} - {item.Details.product_name}
+              {item.Details.product_name}
               <button onClick={(e) => {
                 e.stopPropagation();
                 addToRecipeList(item);
@@ -135,121 +135,79 @@ function InventoryPage() {
             <input
               type="text"
               name="name"
-              value={selectedItem.Details.name || ''}
+              value={selectedItem.Details.product_name || ''}
               onChange={handleInputChange}
               placeholder="Name"
             />
             <input
               type="text"
-              name="brand"
-              value={selectedItem.Details.brand || ''}
-              onChange={handleInputChange}
-              placeholder="Brand"
-            />
-            <input
-              type="text"
-              name="category"
-              value={selectedItem.Details.category || ''}
-              onChange={handleInputChange}
-              placeholder="Category"
-            />
-            <input
-              type="text"
               name="nutrition_facts.serving_size"
-              value={selectedItem.Details.nutrition_facts?.serving_size || ''}
+              value={"Serving Size: " + selectedItem.Details.serving_size || ''}
               onChange={handleInputChange}
-              placeholder="Serving Size"
+              placeholder="Serving Size: " 
             />
             <input
               type="text"
               name="nutrition_facts.calories"
-              value={selectedItem.Details.nutrition_facts?.calories || ''}
+              value={"Calories: " + selectedItem.Details.calories || ''}
               onChange={handleInputChange}
-              placeholder="Calories"
+              placeholder="Calories: "
             />
             <input
               type="text"
               name="nutrition_facts.total_fat"
-              value={selectedItem.Details.nutrition_facts?.total_fat || ''}
+              value={"Total Fat: " + selectedItem.Details.total_fat || ''}
               onChange={handleInputChange}
-              placeholder="Total Fat"
-            />
-            <input
-              type="text"
-              name="nutrition_facts.saturated_fat"
-              value={selectedItem.Details.nutrition_facts?.saturated_fat || ''}
-              onChange={handleInputChange}
-              placeholder="Saturated Fat"
-            />
-            <input
-              type="text"
-              name="nutrition_facts.trans_fat"
-              value={selectedItem.Details.nutrition_facts?.trans_fat || ''}
-              onChange={handleInputChange}
-              placeholder="Trans Fat"
-            />
-            <input
-              type="text"
-              name="nutrition_facts.cholesterol"
-              value={selectedItem.Details.nutrition_facts?.cholesterol || ''}
-              onChange={handleInputChange}
-              placeholder="Cholesterol"
+              placeholder="Total Fat: "
             />
             <input
               type="text"
               name="nutrition_facts.sodium"
-              value={selectedItem.Details.nutrition_facts?.sodium || ''}
+              value={"Sodium: " + selectedItem.Details.sodium || ''}
               onChange={handleInputChange}
-              placeholder="Sodium"
+              placeholder="Sodium: "
             />
             <input
               type="text"
               name="nutrition_facts.total_carbohydrates"
-              value={selectedItem.Details.nutrition_facts?.total_carbohydrates || ''}
+              value={"Total Carbohydrates: " + selectedItem.Details.carbohydrates || ''}
               onChange={handleInputChange}
-              placeholder="Total Carbohydrates"
-            />
-            <input
-              type="text"
-              name="nutrition_facts.dietary_fiber"
-              value={selectedItem.Details.nutrition_facts?.dietary_fiber || ''}
-              onChange={handleInputChange}
-              placeholder="Dietary Fiber"
+              placeholder="Total Carbohydrates: "
             />
             <input
               type="text"
               name="nutrition_facts.sugars"
-              value={selectedItem.Details.nutrition_facts?.sugars || ''}
+              value={"Sugars: " + selectedItem.Details.sugar || ''}
               onChange={handleInputChange}
-              placeholder="Sugars"
+              placeholder="Sugars: "
             />
             <input
               type="text"
               name="nutrition_facts.protein"
-              value={selectedItem.Details.nutrition_facts?.protein || ''}
+              value={"Protein: " + selectedItem.Details.protein || ''}
               onChange={handleInputChange}
-              placeholder="Protein"
+              placeholder="Protein: "
             />
             <input
               type="text"
               name="ingredients"
-              value={selectedItem.Details.ingredients || ''}
+              value={"Ingredients: " + selectedItem.Details.ingredients || ''}
               onChange={handleInputChange}
-              placeholder="Ingredients"
+              placeholder="Ingredients: "
             />
             <input
               type="text"
               name="expiration_date"
-              value={selectedItem.Details.expiration_date || ''}
+              value={"Expiration Date: " + selectedItem.Details.expiration_date || ''}
               onChange={handleInputChange}
-              placeholder="Expiration Date"
+              placeholder="Expiration Date: "
             />
             <input
               type="text"
               name="quantity"
-              value={selectedItem.Details.quantity || ''}
+              value={"Quantity: " + selectedItem.Details.quantity || ''}
               onChange={handleInputChange}
-              placeholder="Quantity"
+              placeholder="Quantity: "
             />
             <button onClick={handleSaveChanges}>Save</button>
           </div>
@@ -260,7 +218,7 @@ function InventoryPage() {
           {recipeList.length > 0 ? (
             recipeList.map((item, index) => (
               <div key={index} className="food-item" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>{item.Details.name}</span>
+                <span>{item.Details.product_name}</span>
                 <button onClick={() => removeFromRecipeList(index)}>-</button>
               </div>
             ))

@@ -13,6 +13,7 @@ import shutil
 import base64
 import json
 from openai import OpenAI
+from search import execute_search
 
 # PostgresSQL Connection Paramaters
 db_conn_params = {
@@ -33,7 +34,7 @@ bucket_name = 'kitbucketaws'
 
 #OpenAI API Key
 
-api_key = os.getenv("GPT_API_KEY")
+api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
 def load_model():
@@ -583,6 +584,10 @@ def process_unprocessed_frames():
     # Query all unprocessed frames from the database
     unprocessed_frames = query_unprocessed_frames()
 
+    # Create the "final_classifications" folder if it doesn't exist
+    if not os.path.exists("final_classifications"):
+        os.makedirs("final_classifications")
+
     # Process each unprocessed frame
     for frame in unprocessed_frames:
         frame_id = frame[0]
@@ -592,7 +597,7 @@ def process_unprocessed_frames():
             # Download the frame from S3
             local_frame_path = download_frame_from_s3(frame_path)
 
-            # Classify the frame using the llm_classify function
+            # Classify the frame using the llm_classify function. This function will return a json file with the pre-classification results 
             llm_classify(local_frame_path)
 
             # Get the JSON file path
@@ -602,8 +607,38 @@ def process_unprocessed_frames():
             with open(json_file_path, "r") as json_file:
                 json_data = json.load(json_file)
 
-            # Insert the JSON data into the FoodItem table
-            insert_food_item(frame_id, json_data)
+            # Check the food_type in the JSON data
+            food_type = json_data.get("food_type")
+
+            if food_type == "produce":
+                # Save the JSON data to the "final_classifications" folder
+                final_json_path = os.path.join("final_classifications", f"frame_{frame_id}.json")
+                with open(final_json_path, "w") as final_json_file:
+                    json.dump(json_data, final_json_file, indent=4)
+
+                # Insert the JSON data into the FoodItem table
+                insert_food_item(frame_id, json_data)
+            elif food_type == "packaged":
+                # Get the product_name from the JSON data
+                product_name = json_data.get("product_name")
+                
+                # Call execute_search from search.py with the product_name
+                search_json_data = execute_search(product_name)
+                
+                if search_json_data:
+                    # Save the JSON data to the "final_classifications" folder
+                    final_json_path = os.path.join("final_classifications", f"frame_{frame_id}.json")
+                    with open(final_json_path, "w") as final_json_file:
+                        json.dump(search_json_data, final_json_file, indent=4)
+
+                    # Insert the JSON data from execute_search into the FoodItem table
+                    insert_food_item(frame_id, search_json_data)
+                else:
+                    insert_food_item(frame_id, json_data)
+                    print(f"No JSON data returned from execute_search for frame {frame_id}. Pre-Classification JSON data used instead.")
+            else:
+                # Ignore the frame if food_type is neither "produce" nor "packaged"
+                print(f"Ignoring frame {frame_id} with food_type: {food_type}")
 
             # Update the frame as processed in the database
             update_frame_as_processed(frame_id)
@@ -727,6 +762,10 @@ def delete_all_data():
         shutil.rmtree("json_files")
     if os.path.exists("S3Downloads"):
         shutil.rmtree("S3Downloads")
+    if os.path.exists("final_classifications"):
+        shutil.rmtree("final_classifications")
+    if os.path.exists("extracted_barcode_frames"):
+        shutil.rmtree("extracted_barcode_frames")
             
 def execute_insert_video(file, location):
     s3_key = upload_video_to_s3(file)

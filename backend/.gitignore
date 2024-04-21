@@ -37,9 +37,9 @@ yolov8l.pt
 yolov8m.pt
 yolov8x.pt
 
-#ignore S3 Downloads and MP4
+#ignore Folders
 S3Downloads/
-.MP4
+
 
 #ignore extracted_images folder
 extracted_images/
@@ -51,3 +51,7 @@ venv/
 my_project_env/
 ```
 idea/
+
+#ignore jsons and videos
+.json
+.MP4

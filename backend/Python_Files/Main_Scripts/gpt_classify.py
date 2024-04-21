@@ -4,7 +4,7 @@ import json
 import os
 
 # OpenAI API key
-api_key = os.getenv("GPT_API_KEY")
+api_key = os.getenv("OPENAI_API_KEY")
 
 # Function to encode the image
 def encode_image(image_path):
@@ -43,7 +43,7 @@ def llm_classify(image_path):
                 "content": [
                     {
                         "type": "text",
-                        "text": "Examine the image to determine if it features a grocery item. Output should be in JSON format. If the item is not a grocery item, the JSON should state: {\"food_type\": \"not a grocery item\"}. If the item is a produce, the JSON should include: {\"food_type\": \"produce\", \"product_name\": \"<item name>\", \"nutrition_info\": {<nutrition details>}, \"approximate_expiration_time\": \"<approximated expiration time after purchase>\"}. If the item is packaged, the JSON should include: {\"food_type\": \"packaged\", \"product_name\": \"<extracted text>\", \"details\": {<extracted product details>}}."
+                        "text": "Examine the image to determine if it features a grocery item. Output should be in JSON format. If the item is not a grocery item, the JSON should state: {\"food_type\": \"not a grocery item\"}. If the item is a produce, the JSON should include: {\"food_type\": \"produce\", \"product_name\": \"<item name>\", \"calories\": \"<item calories>\", \"protein\": \"<item protein>\", \"sugar\": \"<item sugar>\", \"total_fat\": \"<item total_fat>\", \"carbohydrates\": \"<item carbohydrates>\", \"serving_size\": \"<item serving_size>\", \"sodium\": \"<item sodium>\". If the item is packaged, the JSON should include: {\"food_type\": \"packaged\", \"product_name\": \"<extracted text>\". The product_name should include the brand name as well. Fully JSON parseable output is required, including delimiters and key-value pairs." 
                     },
                     {
                         "type": "image_url",
@@ -68,6 +68,8 @@ def llm_classify(image_path):
         # Parse the response text as JSON
         item_data = json.loads(extract_json(response_text))
 
+        
+
         # Create the "json_files" folder if it doesn't exist
         os.makedirs("json_files", exist_ok=True)
 
@@ -89,5 +91,6 @@ def llm_classify(image_path):
         print(f"Response text: {response_text}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-#llm_classify("AppleImage.jpeg")
+    #return the json data
+        return item_data
 
