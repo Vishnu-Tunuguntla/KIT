@@ -109,26 +109,42 @@ function InventoryPage() {
     }
   };
 
+  const handleDeleteAll = async () => {
+    try {
+        const response = await axios.delete(`${backendHost}/api/delete-all-data`);
+        alert('All data deleted successfully!');
+        setFoodItems([]);  // Assuming you want to clear the displayed items on UI as well
+    } catch (error) {
+        console.error('Error deleting all data:', error);
+        alert('Error deleting all data. Please try again.');
+    }
+};
+
   return (
     <div className="inventory-page">
       <div className="content">
-        {foodItems.length > 0 ? (
-          foodItems.map((item, index) => (
-            <div key={index} className="food-item" onClick={() => handleItemClick(item)}>
-              {item.Details.product_name}
-              <button onClick={(e) => {
-                e.stopPropagation();
-                addToRecipeList(item);
-              }}>+</button>
-              <button onClick={(e) => {
-                e.stopPropagation();
-                handleAddBarcode(item.ItemID);
-              }}>Add Barcode</button>
-            </div>
-          ))
-        ) : (
-          <p>No Items Currently In Inventory</p>
-        )}
+        <div className="delete-all-button-container">
+          <button className="delete-all-button" onClick={handleDeleteAll}>Delete All Data</button>
+        </div>
+    <div className="food-items-container">
+      {foodItems.length > 0 ? (
+        foodItems.map((item, index) => (
+          <div key={index} className="food-item" onClick={() => handleItemClick(item)}>
+            <p>{item.Details.product_name}</p>
+            <button onClick={(e) => {
+              e.stopPropagation();
+              addToRecipeList(item);
+            }}>+</button>
+            <button onClick={(e) => {
+              e.stopPropagation();
+              handleAddBarcode(item.ItemID);
+            }}>Add Barcode</button>
+          </div>
+        ))
+      ) : (
+        <p>No Items Currently In Inventory</p>
+      )}
+    </div>
 
         {selectedItem && (
           <div className="details-table">

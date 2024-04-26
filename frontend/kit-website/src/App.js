@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import DropdownBar from './DropdownBar';
-import './DropdownBar.css';
+import HeaderNav from './Header';
+import './Header.css';
 import './App.css';
 import './InventoryPage.css';
 import UploadVideoPage from './UploadVideoPage';
@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <DropdownBar />
+        <HeaderNav />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/upload-video" element={<UploadVideoPage />} />

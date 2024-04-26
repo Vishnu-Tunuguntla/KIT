@@ -15,6 +15,15 @@ function UploadVideoPage() {
       setFileName(file.name); // Set the file name for display
     }
   };
+  const handleExecute = async () => {
+    try {
+      await axios.post(`${backendHost}/api/execute`);
+      alert('Extraction and analysis executed successfully!');
+    } catch (error) {
+      console.error('Error executing extraction and analysis:', error);
+      alert('Error executing extraction and analysis. Please try again.');
+    }
+  };
 
   const handleUpload = async () => {
     if (!selectedFile) {
@@ -33,12 +42,16 @@ function UploadVideoPage() {
       });
       console.log(response.data.message);
       alert('Video uploaded successfully!');
+
       // Clear the selected file and reset the file input for the next upload
       setSelectedFile(null);
       setFileName('');
       if (fileInputRef.current) {
         fileInputRef.current.value = null;
       }
+
+      // Execute extraction and analysis right after the successful upload
+      await handleExecute();
     } catch (error) {
       console.error('Error uploading video:', error);
       // Constructing a user-friendly error message based on the error response
@@ -56,6 +69,7 @@ function UploadVideoPage() {
       alert(errorMessage);
     }
   };
+
 
   return (
     <div className="page-container">

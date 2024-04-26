@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body, .header-nav, button {
+  font-family: 'Roboto', sans-serif;
+}
+
+.header-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #252424; /* Adjust the color as needed */
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+}
+
+.header-title {
+  color: white;
+  font-size: 20px;
+}
+
+.nav-buttons button {
+  background-color: #252424; /* Match the header */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.2s;
+}
+
+.nav-buttons button:hover {
+  background-color: #383838; /* Slightly lighter color on hover */
+}

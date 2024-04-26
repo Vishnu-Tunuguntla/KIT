@@ -19,14 +19,17 @@
     padding: 20px;
     width: 80%; /* Increase the width of the upload container */
     max-width: 600px; /* You can adjust this value based on your design preference */
-    background-color: #f4f4f4; /* Light gray background for the upload container */
+    background-color: gray; /* Light gray background for the upload container */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
     border-radius: 8px; /* Rounded corners for a modern look */
+    border: 2px dashed;
+    padding-top: 100px;
+    padding-bottom: 100px;
   }
   
   .file-name {
     font-size: 24px; /* Increase the font size for better visibility */
-    color: #4caf50; /* Bright blue color for the file name */
+    color: white; /* Bright blue color for the file name */
     margin-bottom: 20px;
     word-break: break-all; /* Ensure long filenames don't overflow */
   }
@@ -36,15 +39,6 @@
     gap: 10px; /* Maintain space between buttons */
     width: 100%; /* Ensure buttons take up the full width of their container */
     justify-content: space-around; /* This will space out the buttons nicely */
-  }
-  
-  .file-input {
-    margin: 20px;
-    padding: 10px;
-    border: 2px dashed #007bff; /* Dashed border for the file input, matching file name color */
-    color: #007bff;
-    width: 100%; /* Full width for alignment with the buttons */
-    display: none; /* Hide the actual input element */
   }
   
   .upload-button, .select-button {
@@ -58,14 +52,15 @@
   }
   
   .upload-button, .select-button {
-    background-color: #4caf50; /* Green background for the upload button */
-    color: white; /* White text for better readability */
+    background-color: white; /* Green background for the upload button */
+    color: black; /* White text for better readability */
   }
   
 
   
   .upload-button:hover, .select-button:hover {
-    background-color: #45a049; /* Darker green on hover for the upload button */
+    background-color: black; /* Darker green on hover for the upload button */
     transform: scale(1.05); /* Slightly enlarge buttons on hover */
+    color: white;
   }
   
